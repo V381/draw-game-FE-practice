@@ -1,0 +1,16 @@
+:root {
+    --primary: #0A1F62;
+    --btn-bg:  #00B0FF;
+    --btn-hover-bg: #0091EA; 
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--primary);
+    background-image: url('./background.jpg');
+    background-size: cover;
+}
