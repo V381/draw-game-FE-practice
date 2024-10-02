@@ -1,2 +1,2 @@
 # draw-game-FE-practice
-Practicing...
+Draw game 
