@@ -106,7 +106,6 @@ export default {
       formSubmitted.value = true
       if (validateForm()) {
         console.log('Sign in attempt with:', { email: email.value, password: password.value })
-        // Proceed with your form submission logic here (e.g., API call)
       }
     }
 
