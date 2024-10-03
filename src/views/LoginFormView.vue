@@ -8,7 +8,7 @@
 import Main from '@/components/auth/Main.vue'
 
 export default {
-  name: 'HomeView',
+  name: 'LoginFormView',
   components: {
     Main
   }
