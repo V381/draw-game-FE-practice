@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Login from '@/views/LoginFormView.vue'
-import Home from '@/views/AboutView.vue'
-
+import Home from '@/views/GamePage.vue'
+import Draw from '@/components/draw/Draw.vue'
 const routes = [
   {
     path: '/',
@@ -13,6 +13,12 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/live-draw',
+    name: 'draw',
+    component: Draw,
     meta: { requiresAuth: true }
   }
 ]
