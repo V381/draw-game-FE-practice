@@ -32,7 +32,12 @@
 
 <script>
 import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import Input from '@/components/common/Input.vue'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '@/firebase'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 export default {
   name: 'LoginForm',
@@ -41,6 +46,7 @@ export default {
   },
   emits: ['login', 'toggle-form'],
   setup (props, { emit }) {
+    const router = useRouter()
     const email = ref('')
     const password = ref('')
     const emailError = ref('')
@@ -94,10 +100,25 @@ export default {
       return isEmailValid.value && isPasswordValid.value
     }
 
-    const submit = () => {
+    const submit = async () => {
       formSubmitted.value = true
       if (validateForm()) {
-        emit('login', { email: email.value, password: password.value })
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
+          const user = userCredential.user
+          emit('login', user)
+          toast.success('Login successful!', {
+            autoClose: 1000,
+            onClose: () => {
+              router.push('/home')
+            }
+          })
+        } catch (error) {
+          console.error('Error signing in:', error.message)
+          toast.error('Login failed. Please check your credentials.', {
+            autoClose: 3000
+          })
+        }
       }
     }
 

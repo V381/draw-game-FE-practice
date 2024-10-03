@@ -44,6 +44,9 @@
 <script>
 import { ref, watch } from 'vue'
 import Input from '@/components/common/Input.vue'
+import { createUserWithEmailAndPassword, auth } from '@/firebase'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 export default {
   name: 'RegisterForm',
@@ -128,10 +131,25 @@ export default {
       return isEmailValid.value && isPasswordValid.value && isConfirmPasswordValid.value
     }
 
-    const submit = () => {
+    const submit = async () => {
       formSubmitted.value = true
       if (validateForm()) {
-        emit('register', { email: email.value, password: password.value })
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
+          const user = userCredential.user
+          emit('register', user)
+          toast.success('Registration successful! You will be redirected to login form...', {
+            autoClose: 1000,
+            onClose: () => {
+              emit('toggle-form')
+            }
+          })
+        } catch (error) {
+          console.log(error)
+          toast.error('Registration failed! ' + error, {
+            autoClose: 4000
+          })
+        }
       }
     }
 
