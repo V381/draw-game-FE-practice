@@ -8,7 +8,6 @@
 <script>
 import MainHeader from '@/components/common/Header.vue'
 import HomePage from '@/components/homepage/HomePage.vue'
-
 export default {
   name: 'AboutView',
   components: {

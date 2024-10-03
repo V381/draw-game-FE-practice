@@ -65,7 +65,9 @@ export default {
     }
 
     const submitBet = () => {
-      router.push({ name: 'Draw', query: { numbers: selectedNumbers.value.join(',') } })
+      sessionStorage.setItem('selectedNumbers', JSON.stringify(selectedNumbers.value))
+      sessionStorage.setItem('betSubmitted', 'true')
+      router.push({ name: 'draw', query: { numbers: selectedNumbers.value.join(',') } })
     }
 
     return {
