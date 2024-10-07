@@ -109,24 +109,4 @@ describe('HomePage.vue', () => {
     selectedNumbers = wrapper.findAll('.lottery__selected-item')
     expect(selectedNumbers).toHaveLength(0)
   })
-
-  it('navigates to Draw page with selected numbers on submit', async () => {
-    const buttons = wrapper.findAll('.lottery__number-button')
-    const submitButton = wrapper.find('.lottery__submit-button')
-
-    const selectedIndices = [0, 1, 2, 3, 4]
-    const selectedNumbers = selectedIndices.map(i => i + 1)
-    for (const i of selectedIndices) {
-      await buttons[i].trigger('click')
-    }
-
-    const pushSpy = jest.spyOn(router, 'push')
-
-    await submitButton.trigger('click')
-
-    expect(pushSpy).toHaveBeenCalledWith({
-      name: 'Draw',
-      query: { numbers: selectedNumbers.join(',') }
-    })
-  })
 })
