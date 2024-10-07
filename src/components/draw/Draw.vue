@@ -84,6 +84,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import Modal from '@/components/common/Modal.vue'
+import { shuffleArray } from '@/utils/shuffle'
 export default {
   name: 'DrawPage',
   components: {
@@ -203,16 +204,6 @@ export default {
     onMounted(() => {
       startDraw()
     })
-
-    // Fisher-Yates Shuffle Algorithm
-    const shuffleArray = (array) => {
-      const arr = [...array]
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1))
-        ;[arr[i], arr[j]] = [arr[j], arr[i]]
-      }
-      return arr
-    }
 
     return {
       drawnNumbers,

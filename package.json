@@ -12,6 +12,7 @@
     "core-js": "^3.8.3",
     "dotenv": "^16.4.5",
     "firebase": "^10.14.0",
+    "flush-promises": "^1.0.2",
     "vue": "^3.2.13",
     "vue-final-modal": "^4.5.5",
     "vue-router": "^4.0.3",
