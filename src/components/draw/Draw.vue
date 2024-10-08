@@ -84,7 +84,10 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import Modal from '@/components/common/Modal.vue'
-import { shuffleArray } from '@/utils/shuffle'
+import shuffleArray from '@/utils/shuffleArray'
+import { collection, addDoc } from 'firebase/firestore'
+import { db } from '@/firebase'
+
 export default {
   name: 'DrawPage',
   components: {
@@ -184,17 +187,31 @@ export default {
       }
     })
 
-    const saveToHistory = () => {
+    const saveToHistory = async () => {
       const history = JSON.parse(localStorage.getItem('drawHistory')) || []
-      const newEntry = {
-        timestamp: new Date().toLocaleString(),
-        drawnNumbers: drawnNumbers.value,
-        playerBet: userNumbers,
-        totalWinnings: totalWinnings.value
+      try {
+        const newEntry = {
+          timestamp: new Date().toISOString(),
+          drawnNumbers: drawnNumbers.value,
+          playerBet: userNumbers,
+          totalWinnings: totalWinnings.value
+        }
+        console.log('New entry to be saved:', newEntry)
+
+        // Add to Firestore
+        const docRef = await addDoc(collection(db, 'drawHistory'), newEntry)
+        console.log('Document written with ID: ', docRef.id)
+
+        // Update local history
+        history.push(newEntry)
+        localStorage.setItem('drawHistory', JSON.stringify(history))
+
+        alert('Draw saved to history!')
+        goToHome()
+      } catch (error) {
+        console.error('Error saving to history:', error)
+        alert(`Failed to save draw to history: ${error.message}`)
       }
-      history.push(newEntry)
-      localStorage.setItem('drawHistory', JSON.stringify(history))
-      alert('Draw saved to history!')
     }
 
     const goToHome = () => {
@@ -231,7 +248,7 @@ export default {
 
 .draw-page__title {
   font-size: 32px;
-  color: #005baa;
+  color: white;
 }
 
 .draw-page__container {

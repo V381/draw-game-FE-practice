@@ -3,8 +3,10 @@ import RegisterForm from '@/components/auth/RegisterForm.vue'
 import Input from '@/components/common/Input.vue'
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth'
 
-jest.mock('firebase/auth')
-
+jest.mock('firebase/auth', () => ({
+  getAuth: jest.fn(() => ({})),
+  createUserWithEmailAndPassword: jest.fn()
+}))
 describe('RegisterForm.vue', () => {
   let wrapper
   const mockAuth = {}

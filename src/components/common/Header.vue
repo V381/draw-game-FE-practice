@@ -2,11 +2,14 @@
   <header class="header">
     <nav>
       <ul class="header__menu">
-        <li v-if="!canAccessLiveDraw">
+        <li v-if="!canAccessLiveDraw && !isHomePage">
           <router-link to="/" class="header__link">Home</router-link>
         </li>
-        <li v-if="canAccessLiveDraw">
+        <li v-if="canAccessLiveDraw && !isLiveDrawPage">
           <router-link to="/live-draw" class="header__link">Live Draw</router-link>
+        </li>
+        <li v-if="!isHistoryPage">
+          <router-link to="/history" class="header__link">History</router-link>
         </li>
       </ul>
     </nav>
@@ -32,13 +35,14 @@
 
 <script>
 import { getAuth, signOut } from 'firebase/auth'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { computed } from 'vue'
 
 export default {
   name: 'main-header',
   setup () {
     const router = useRouter()
+    const route = useRoute()
 
     const logout = async () => {
       const auth = getAuth()
@@ -58,7 +62,17 @@ export default {
       return betSubmitted === 'true' && selectedNumbers
     })
 
-    return { logout, canAccessLiveDraw }
+    const isHomePage = computed(() => route.path === '/')
+    const isLiveDrawPage = computed(() => route.path === '/live-draw')
+    const isHistoryPage = computed(() => route.path === '/history')
+
+    return {
+      logout,
+      canAccessLiveDraw,
+      isHomePage,
+      isLiveDrawPage,
+      isHistoryPage
+    }
   }
 }
 </script>

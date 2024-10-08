@@ -3,6 +3,8 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Login from '@/views/LoginFormView.vue'
 import Home from '@/views/GamePage.vue'
 import Draw from '@/views/DrawPage.vue'
+import History from '@/views/HistoryPage.vue'
+import DrawDetails from '@/views/DetailsPage.vue'
 const routes = [
   {
     path: '/',
@@ -19,6 +21,18 @@ const routes = [
     path: '/live-draw',
     name: 'draw',
     component: Draw,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/history',
+    name: 'History',
+    component: History,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/draw/:id',
+    name: 'DrawDetails',
+    component: DrawDetails,
     meta: { requiresAuth: true }
   }
 ]

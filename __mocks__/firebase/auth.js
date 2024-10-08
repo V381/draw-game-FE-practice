@@ -1,9 +1,7 @@
-const mockCreateUserWithEmailAndPassword = jest.fn()
-const mockSignInWithEmailAndPassword = jest.fn()
-const mockGetAuth = jest.fn(() => ({}))
+const getAuth = jest.fn(() => ({
+  signInWithEmailAndPassword: jest.fn(),
+  createUserWithEmailAndPassword: jest.fn(),
+  signOut: jest.fn(),
+}))
 
-module.exports = {
-  getAuth: mockGetAuth,
-  createUserWithEmailAndPassword: mockCreateUserWithEmailAndPassword,
-  signInWithEmailAndPassword: mockSignInWithEmailAndPassword,
-}
+module.exports = { getAuth }

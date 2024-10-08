@@ -4,7 +4,11 @@ import Input from '@/components/common/Input.vue'
 import { signInWithEmailAndPassword, getAuth } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 
-jest.mock('firebase/auth')
+jest.mock('firebase/auth', () => ({
+  getAuth: jest.fn(() => ({})),
+  signInWithEmailAndPassword: jest.fn()
+}))
+
 jest.mock('vue-router', () => ({
   useRouter: jest.fn()
 }))

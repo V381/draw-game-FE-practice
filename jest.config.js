@@ -6,7 +6,8 @@ module.exports = {
     '^firebase/app$': '<rootDir>/__mocks__/firebase/app.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^.+\\.(css|sass|scss)$': '<rootDir>/__mocks__/styleMock.js',
-    '^.+\\.(png|jpg|jpeg|gif|svg)$': '<rootDir>/__mocks__/fileMock.js'
+    '^.+\\.(png|jpg|jpeg|gif|svg)$': '<rootDir>/__mocks__/fileMock.js',
+    '^@utils/(.*)$': '<rootDir>/src/utils/$1.js'
   },
   transform: {
     '^.+\\.vue$': '@vue/vue3-jest',
