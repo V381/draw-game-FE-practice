@@ -4,49 +4,43 @@
       <div v-if="drawHistory.length === 0" class="history-page__no-history">
         No draw history available.
       </div>
-      <table v-else class="history-page__table">
-        <thead>
-          <tr>
-            <th class="history-page__table-header">Draw Number</th>
-            <th class="history-page__table-header">Drawn Numbers</th>
-            <th class="history-page__table-header">Status</th>
-            <th class="history-page__table-header">Amount</th>
-            <th class="history-page__table-header">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(draw, index) in drawHistory"
-            :key="draw.id"
-            @click="showDetails(draw)"
-            class="history-page__table-row"
-          >
-            <td class="history-page__table-cell">{{ drawHistory.length - index }}</td>
-            <td class="history-page__table-cell">
-              <span
-                v-for="number in draw.drawnNumbers"
-                :key="number"
-                class="history-page__draw-number"
-                :class="{ 'history-page__draw-number--winning': draw.playerBet.includes(number) }"
-              >
-                {{ number }}
-              </span>
-            </td>
-            <td
-              class="history-page__table-cell"
-              :class="draw.totalWinnings > 0 ? 'history-page__status--won' : 'history-page__status--lost'"
+      <div v-else class="history-page__list">
+        <div class="history-page__header">
+          <span>Draw Number</span>
+          <span>Drawn Numbers</span>
+          <span>Status</span>
+          <span>Amount</span>
+          <span>Actions</span>
+        </div>
+        <div
+          v-for="(draw, index) in drawHistory"
+          :key="draw.id"
+          @click="showDetails(draw)"
+          class="history-page__item"
+        >
+          <span>{{ drawHistory.length - index }}</span>
+          <div class="history-page__numbers">
+            <span
+              v-for="number in draw.drawnNumbers"
+              :key="number"
+              class="history-page__draw-number"
+              :class="{ 'history-page__draw-number--winning': draw.playerBet.includes(number) }"
             >
-              {{ draw.totalWinnings > 0 ? 'Won' : 'Lost' }}
-            </td>
-            <td class="history-page__table-cell">{{ draw.totalWinnings }}€</td>
-            <td class="history-page__table-cell">
-              <button @click.stop="deleteDraw(draw.id)" class="history-page__delete-btn">
-                🗑️
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              {{ number }}
+            </span>
+          </div>
+          <span
+            class="history-page__status"
+            :class="draw.totalWinnings > 0 ? 'history-page__status--won' : 'history-page__status--lost'"
+          >
+            {{ draw.totalWinnings > 0 ? 'Won' : 'Lost' }}
+          </span>
+          <span>{{ draw.totalWinnings }}€</span>
+          <button @click.stop="deleteDraw(draw.id)" class="history-page__delete-btn">
+            🗑️
+          </button>
+        </div>
+      </div>
     </div>
   </template>
 
@@ -113,27 +107,56 @@ export default {
     font-size: 18px;
   }
 
-  .history-page__table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+  .history-page__list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .history-page__table-header,
-  .history-page__table-cell {
-    border: 1px solid #ddd;
+  .history-page__header,
+  .history-page__item {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 0.5fr 0.5fr 0.5fr;
+    align-items: center;
     padding: 12px;
-    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
   }
 
-  .history-page__table-header {
+  .history-page__header {
     background-color: #0A1F62;
     color: white;
+    font-weight: bold;
   }
 
-  .history-page__table-row:hover {
-    background-color: var(--btn-hover-bg);
+  .history-page__item {
     cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .history-page__item:hover {
+    background-color: var(--btn-hover-bg);
+  }
+
+  .history-page__numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .history-page__draw-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+  }
+
+  .history-page__draw-number--winning {
+    background-color: #4caf50;
+    color: white;
   }
 
   .history-page__status--won {
@@ -151,19 +174,4 @@ export default {
     font-size: 18px;
   }
 
-  .history-page__draw-number {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    margin-right: 5px;
-  }
-
-  .history-page__draw-number--winning {
-    background-color: #4caf50;
-    color: white;
-  }
   </style>

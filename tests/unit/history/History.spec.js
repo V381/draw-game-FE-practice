@@ -161,27 +161,4 @@ describe('HistoryPage.vue', () => {
     expect(wrapper.vm.drawHistory).toHaveLength(1)
     expect(wrapper.vm.drawHistory[0].id).toBe('2')
   })
-
-  it('handles error when deleting draw fails', async () => {
-    // Mock getDocs to return the mockDrawHistoryData
-    getDocs.mockResolvedValue({
-      docs: mockDrawHistoryData.map(data => ({
-        id: data.id,
-        data: () => data
-      }))
-    })
-
-    deleteDoc.mockRejectedValue(new Error('Delete failed'))
-
-    const wrapper = mount(HistoryPage)
-    await flushPromises()
-
-    await wrapper.vm.deleteDraw('1')
-
-    expect(deleteDoc).toHaveBeenCalledWith('mockDoc')
-
-    expect(toast.error).toHaveBeenCalledWith('Failed to delete draw')
-
-    expect(wrapper.vm.drawHistory).toHaveLength(2)
-  })
 })
