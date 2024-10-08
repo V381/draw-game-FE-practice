@@ -1,7 +1,8 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { initializeFirestore } from 'firebase/firestore'
 
-// This should be not private I... https://firebase.google.com/docs/projects/api-keys
+// This should be not private... https://firebase.google.com/docs/projects/api-keys
 const firebaseConfig = {
   apiKey: 'AIzaSyBMo3yESMc9QDyGznUEXPJaJJShiqwaww4',
   authDomain: 'draw-game-3d824.firebaseapp.com',
@@ -15,5 +16,9 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
+const db = initializeFirestore(app, {
+  experimentalForceLongPolling: true,
+  useFetchStreams: false
+})
 
-export { auth, createUserWithEmailAndPassword }
+export { auth, createUserWithEmailAndPassword, db }

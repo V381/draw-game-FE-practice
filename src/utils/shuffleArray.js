@@ -9,4 +9,4 @@ const shuffleArray = (array) => {
   return arr
 }
 
-module.exports = shuffleArray
+export default shuffleArray

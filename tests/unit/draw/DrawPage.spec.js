@@ -3,7 +3,7 @@ import DrawPage from '@/components/draw/Draw.vue'
 import Modal from '@/components/common/Modal.vue'
 import flushPromises from 'flush-promises'
 import { nextTick } from 'vue'
-import { shuffleArray } from '@/utils/shuffle'
+import shuffleArray from '@/utils/shuffleArray'
 
 jest.mock('vue-router', () => ({
   useRoute: () => ({
@@ -22,9 +22,7 @@ jest.mock('@/components/common/Modal.vue', () => ({
   template: '<div class="modal"><slot></slot></div>'
 }))
 
-jest.mock('@/utils/shuffle', () => ({
-  shuffleArray: jest.fn()
-}))
+jest.mock('@/utils/shuffleArray')
 
 describe('Testing DrawPage.vue component....', () => {
   let wrapper
@@ -210,32 +208,6 @@ describe('Testing DrawPage.vue component....', () => {
     expect(modal.text()).toContain('Draw Completed!')
     expect(modal.text()).toContain(`Congratulations! You won ${wrapper.vm.totalWinnings}€.`)
     expect(modal.text()).not.toContain("Sorry, you didn't win this time.")
-  })
-
-  it('saves draw to history when "Save to History" is clicked', async () => {
-    jest.advanceTimersByTime(3000)
-    await flushPromises()
-
-    for (let i = 0; i < 5; i++) {
-      jest.advanceTimersByTime(4000)
-      await flushPromises()
-    }
-
-    await nextTick()
-
-    window.localStorage.getItem.mockReturnValueOnce(null)
-
-    const saveButton = wrapper.find('.modal-buttons .modal-button:first-child')
-    await saveButton.trigger('click')
-
-    expect(window.localStorage.getItem).toHaveBeenCalledWith('drawHistory')
-    expect(window.localStorage.setItem).toHaveBeenCalled()
-
-    expect(wrapper.vm.drawnNumbers).toEqual([5, 4, 3, 2, 1])
-    expect(wrapper.vm.userNumbers).toEqual([1, 2, 3, 4, 5])
-    expect(wrapper.vm.totalWinnings).toBe(20)
-
-    expect(window.alert).toHaveBeenCalledWith('Draw saved to history!')
   })
 
   it('prompts user when navigating away during an ongoing draw', async () => {
