@@ -1,48 +1,53 @@
 <template>
-    <div class="history-page">
-      <h1 class="history-page__title">Draw History</h1>
-      <div v-if="drawHistory.length === 0" class="history-page__no-history">
-        No draw history available.
+  <div class="history-page">
+    <loading v-model:active="isLoading"
+             :can-cancel="false"
+             :is-full-page="false"
+             :color="'#ffffff'"
+             :background-color="'rgba(10, 31, 98, 0.9)'"
+             loader="bars"/>
+
+    <h1 class="history-page__title">Draw History</h1>
+    <div v-if="drawHistory.length === 0" class="history-page__no-history"></div>
+    <div v-else class="history-page__list">
+      <div class="history-page__header">
+        <span>Draw Number</span>
+        <span>Drawn Numbers</span>
+        <span>Status</span>
+        <span>Amount</span>
+        <span>Actions</span>
       </div>
-      <div v-else class="history-page__list">
-        <div class="history-page__header">
-          <span>Draw Number</span>
-          <span>Drawn Numbers</span>
-          <span>Status</span>
-          <span>Amount</span>
-          <span>Actions</span>
-        </div>
-        <div
-          v-for="(draw, index) in drawHistory"
-          :key="draw.id"
-          @click="showDetails(draw)"
-          class="history-page__item"
-        >
-          <span>{{ drawHistory.length - index }}</span>
-          <div class="history-page__numbers">
-            <span
-              v-for="number in draw.drawnNumbers"
-              :key="number"
-              class="history-page__draw-number"
-              :class="{ 'history-page__draw-number--winning': draw.playerBet.includes(number) }"
-            >
-              {{ number }}
-            </span>
-          </div>
+      <div
+        v-for="(draw, index) in drawHistory"
+        :key="draw.id"
+        @click="showDetails(draw)"
+        class="history-page__item"
+      >
+        <span>{{ drawHistory.length - index }}</span>
+        <div class="history-page__numbers">
           <span
-            class="history-page__status"
-            :class="draw.totalWinnings > 0 ? 'history-page__status--won' : 'history-page__status--lost'"
+            v-for="number in draw.drawnNumbers"
+            :key="number"
+            class="history-page__draw-number"
+            :class="{ 'history-page__draw-number--winning': draw.playerBet.includes(number) }"
           >
-            {{ draw.totalWinnings > 0 ? 'Won' : 'Lost' }}
+            {{ number }}
           </span>
-          <span>{{ draw.totalWinnings }}€</span>
-          <button @click.stop="deleteDraw(draw.id)" class="history-page__delete-btn">
-            🗑️
-          </button>
         </div>
+        <span
+          class="history-page__status"
+          :class="draw.totalWinnings > 0 ? 'history-page__status--won' : 'history-page__status--lost'"
+        >
+          {{ draw.totalWinnings > 0 ? 'Won' : 'Lost' }}
+        </span>
+        <span>{{ draw.totalWinnings }}€</span>
+        <button @click.stop="deleteDraw(draw.id)" class="history-page__delete-btn">
+          🗑️
+        </button>
       </div>
     </div>
-  </template>
+  </div>
+</template>
 
 <script>
 import { ref, onMounted } from 'vue'
@@ -50,23 +55,38 @@ import { useRouter } from 'vue-router'
 import { collection, query, orderBy, getDocs, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { toast } from 'vue3-toastify'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/css/index.css'
 
 export default {
   name: 'HistoryPage',
+  components: {
+    Loading
+  },
   setup () {
     const router = useRouter()
     const drawHistory = ref([])
+    const isLoading = ref(false)
 
     const fetchDrawHistory = async () => {
-      const q = query(collection(db, 'drawHistory'), orderBy('timestamp', 'desc'))
-      const querySnapshot = await getDocs(q)
-      drawHistory.value = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }))
+      isLoading.value = true
+      try {
+        const q = query(collection(db, 'drawHistory'), orderBy('timestamp', 'desc'))
+        const querySnapshot = await getDocs(q)
+        drawHistory.value = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+      } catch (error) {
+        console.error('Error fetching draw history:', error)
+        toast.error('Failed to fetch draw history')
+      } finally {
+        isLoading.value = false
+      }
     }
 
     const deleteDraw = async (id) => {
+      isLoading.value = true
       try {
         await deleteDoc(doc(db, 'drawHistory', id))
         drawHistory.value = drawHistory.value.filter(draw => draw.id !== id)
@@ -74,6 +94,8 @@ export default {
       } catch (error) {
         console.error('Error deleting draw:', error)
         toast.error('Failed to delete draw')
+      } finally {
+        isLoading.value = false
       }
     }
 
@@ -86,13 +108,14 @@ export default {
     return {
       drawHistory,
       deleteDraw,
-      showDetails
+      showDetails,
+      isLoading
     }
   }
 }
 </script>
 
-  <style scoped>
+<style scoped>
   .history-page {
     padding: 20px;
   }
@@ -173,5 +196,15 @@ export default {
     cursor: pointer;
     font-size: 18px;
   }
+  :deep(.vl-overlay) {
+  background-color: rgba(10, 31, 98, 0.9) !important;
+}
 
+:deep(.vl-icon) {
+  stroke: #ffffff !important;
+}
+
+:deep(.vl-backdrop) {
+  backdrop-filter: blur(5px);
+}
   </style>
