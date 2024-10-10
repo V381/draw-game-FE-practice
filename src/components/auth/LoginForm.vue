@@ -1,40 +1,44 @@
 <template>
-    <form @submit.prevent="submit" class="login-form">
-      <h2 class="login-form__title">Sign In</h2>
-      <div class="login-form__group">
-        <Input
-          label="Email:"
-          v-model="email"
-          :error="emailError"
-          :isValid="isEmailValid"
-          placeholder="Enter your email..."
-          type="email"
-          @blur="validateEmail"
-        />
-      </div>
-      <div class="login-form__group">
-        <Input
-          label="Password:"
-          v-model="password"
-          :error="passwordError"
-          :isValid="isPasswordValid"
-          placeholder="Enter your password"
-          type="password"
-          @blur="validatePassword"
-        />
-      </div>
-      <div class="login-form__actions">
-        <button type="submit" class="login-form__submit-btn">Sign In</button>
-        <a href="#" @click.prevent="$emit('toggle-form')" class="login-form__register-link">Register now</a>
-      </div>
-    </form>
-  </template>
+  <form @submit.prevent="submit" class="login-form">
+    <h2 class="login-form__title">Sign In</h2>
+    <div class="login-form__group">
+      <Input
+        label="Email:"
+        v-model="email"
+        :error="emailError"
+        :isValid="isEmailValid"
+        placeholder="Enter your email..."
+        type="email"
+        @blur="validateEmail"
+      />
+    </div>
+    <div class="login-form__group">
+      <Input
+        label="Password:"
+        v-model="password"
+        :error="passwordError"
+        :isValid="isPasswordValid"
+        placeholder="Enter your password"
+        type="password"
+        @blur="validatePassword"
+      />
+    </div>
+    <div class="login-form__actions">
+      <button type="submit" class="login-form__submit-btn">Sign In</button>
+      <button type="button" @click="signInWithGoogle" class="login-form__google-btn">
+        <img src="@/assets/google-icon.svg" alt="Google Icon" class="google-icon" />
+        Sign in with Google
+      </button>
+      <a href="#" @click.prevent="$emit('toggle-form')" class="login-form__register-link">Register now</a>
+    </div>
+  </form>
+</template>
 
 <script>
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import Input from '@/components/common/Input.vue'
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '@/firebase'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
@@ -122,6 +126,26 @@ export default {
       }
     }
 
+    const signInWithGoogle = async () => {
+      try {
+        const provider = new GoogleAuthProvider()
+        const userCredential = await signInWithPopup(auth, provider)
+        const user = userCredential.user
+        emit('login', user)
+        toast.success('Google sign-in successful!', {
+          autoClose: 1000,
+          onClose: () => {
+            router.push('/home')
+          }
+        })
+      } catch (error) {
+        console.error('Error signing in with Google:', error.message)
+        toast.error('Google sign-in failed. Please try again.', {
+          autoClose: 3000
+        })
+      }
+    }
+
     return {
       email,
       password,
@@ -131,61 +155,85 @@ export default {
       isPasswordValid,
       validateEmail,
       validatePassword,
-      submit
+      submit,
+      signInWithGoogle
     }
   }
 }
 </script>
 
-  <style lang="scss" scoped>
-  .login-form {
+<style lang="scss" scoped>
+.login-form {
+  width: 100%;
+
+  &__title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: var(--primary);
+  }
+
+  &__group {
+    margin-bottom: 1.5rem;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  &__submit-btn,
+  &__google-btn {
     width: 100%;
+    padding: 0.75rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
-    &__title {
-      font-size: 2rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-      text-align: center;
-      color: var(--primary);
-    }
+  &__submit-btn {
+    background-color: var(--btn-bg);
+    color: #ffffff;
 
-    &__group {
-      margin-bottom: 1.5rem;
-    }
-
-    &__actions {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    &__submit-btn {
-      width: 100%;
-      padding: 0.75rem;
-      background-color: var(--btn-bg);
-      color: #ffffff;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background-color: var(--btn-hover-bg);
-      }
-    }
-
-    &__register-link {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #00B0FF;
-      text-decoration: none;
-      transition: color 0.3s ease;
-
-      &:hover {
-        color: var(--btn-hover-bg);
-      }
+    &:hover {
+      background-color: var(--btn-hover-bg);
     }
   }
-  </style>
+
+  &__google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    color: #757575;
+    border: 1px solid #dadce0;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    .google-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+  }
+
+  &__register-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #00B0FF;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--btn-hover-bg);
+    }
+  }
+}
+</style>
