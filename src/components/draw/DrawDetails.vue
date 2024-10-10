@@ -1,5 +1,11 @@
 <template>
   <div class="draw-details">
+    <loading v-model:active="isLoading"
+             :can-cancel="false"
+             :is-full-page="false"
+             :color="'#ffffff'"
+             :background-color="'rgba(10, 31, 98, 0.9)'"
+             loader="bars"/>
     <h1 class="draw-details__title">Draw Details</h1>
     <table v-if="draw" class="draw-details__table">
       <tbody>
@@ -61,22 +67,35 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/css/index.css'
 
 export default {
   name: 'DrawDetails',
+  components: {
+    Loading
+  },
   setup () {
     const route = useRoute()
     const router = useRouter()
     const draw = ref(null)
+    const isLoading = ref(true)
 
     const fetchDrawDetails = async () => {
-      const docRef = doc(db, 'drawHistory', route.params.id)
-      const docSnap = await getDoc(docRef)
+      isLoading.value = true
+      try {
+        const docRef = doc(db, 'drawHistory', route.params.id)
+        const docSnap = await getDoc(docRef)
 
-      if (docSnap.exists()) {
-        draw.value = { id: docSnap.id, ...docSnap.data() }
-      } else {
-        console.log('No such document!')
+        if (docSnap.exists()) {
+          draw.value = { id: docSnap.id, ...docSnap.data() }
+        } else {
+          console.log('No such document!')
+        }
+      } catch (error) {
+        console.error('Error fetching draw details:', error)
+      } finally {
+        isLoading.value = false
       }
     }
 
@@ -93,7 +112,8 @@ export default {
     return {
       draw,
       formatDate,
-      goBack
+      goBack,
+      isLoading
     }
   }
 }
@@ -185,4 +205,17 @@ export default {
 .draw-details__back-btn:hover {
   background-color: #002244;
 }
+
+:deep(.vl-overlay) {
+  background-color: rgba(10, 31, 98, 0.9) !important;
+}
+
+:deep(.vl-icon) {
+  stroke: #ffffff !important;
+}
+
+:deep(.vl-backdrop) {
+  backdrop-filter: blur(5px);
+}
+
 </style>

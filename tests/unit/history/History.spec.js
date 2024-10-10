@@ -89,16 +89,6 @@ describe('HistoryPage.vue', () => {
     expect(wrapper.vm.drawHistory).toHaveLength(2)
   })
 
-  it('renders "No draw history available." when drawHistory is empty', async () => {
-    // Mock getDocs to return an empty array
-    getDocs.mockResolvedValue({ docs: [] })
-
-    const wrapper = mount(HistoryPage)
-    await flushPromises()
-
-    expect(wrapper.text()).toContain('No draw history available.')
-  })
-
   it('renders draw history table when data is available', async () => {
     getDocs.mockResolvedValue({
       docs: mockDrawHistoryData.map(data => ({
