@@ -1,48 +1,49 @@
 <template>
-    <form @submit.prevent="submit" class="register-form">
-      <h2 class="register-form__title">Register</h2>
-      <div class="register-form__group">
-        <Input
-          label="Email:"
-          v-model="email"
-          :error="emailError"
-          :isValid="isEmailValid"
-          placeholder="Enter your email..."
-          type="email"
-          @blur="validateEmail"
-        />
-      </div>
-      <div class="register-form__group">
-        <Input
-          label="Password:"
-          v-model="password"
-          :error="passwordError"
-          :isValid="isPasswordValid"
-          placeholder="Enter your password"
-          type="password"
-          @blur="validatePassword"
-        />
-      </div>
-      <div class="register-form__group">
-        <Input
-          label="Confirm Password:"
-          v-model="confirmPassword"
-          :error="confirmPasswordError"
-          :isValid="isConfirmPasswordValid"
-          placeholder="Confirm your password"
-          type="password"
-          @blur="validateConfirmPassword"
-        />
-      </div>
-      <div class="register-form__actions">
-        <button type="submit" class="register-form__submit-btn">Register</button>
-        <a href="#" @click.prevent="$emit('toggle-form')" class="register-form__signin-link">Back to Sign In</a>
-      </div>
-    </form>
-  </template>
+  <form @submit.prevent="submit" class="register-form">
+    <h2 class="register-form__title">{{ $t('register.title') }}</h2>
+    <div class="register-form__group">
+      <Input
+        :label="$t('register.email')"
+        v-model="email"
+        :error="emailError ? $t(emailError) : ''"
+        :isValid="isEmailValid"
+        :placeholder="$t('register.emailPlaceholder')"
+        type="email"
+        @blur="validateEmail"
+      />
+    </div>
+    <div class="register-form__group">
+      <Input
+        :label="$t('register.password')"
+        v-model="password"
+        :error="passwordError ? $t(passwordError) : ''"
+        :isValid="isPasswordValid"
+        :placeholder="$t('register.passwordPlaceholder')"
+        type="password"
+        @blur="validatePassword"
+      />
+    </div>
+    <div class="register-form__group">
+      <Input
+        :label="$t('register.confirmPassword')"
+        v-model="confirmPassword"
+        :error="confirmPasswordError ? $t(confirmPasswordError) : ''"
+        :isValid="isConfirmPasswordValid"
+        :placeholder="$t('register.confirmPasswordPlaceholder')"
+        type="password"
+        @blur="validateConfirmPassword"
+      />
+    </div>
+    <div class="register-form__actions">
+      <button type="submit" class="register-form__submit-btn">{{ $t('register.submit') }}</button>
+      <a href="#" @click.prevent="$emit('toggle-form')" class="register-form__signin-link">{{ $t('register.backToSignIn') }}</a>
+    </div>
+  </form>
+</template>
 
 <script>
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Input from '@/components/common/Input.vue'
 import { createUserWithEmailAndPassword, auth } from '@/firebase'
 import { toast } from 'vue3-toastify'
@@ -55,6 +56,7 @@ export default {
   },
   emits: ['register', 'toggle-form'],
   setup (props, { emit }) {
+    const { t } = useI18n()
     const email = ref('')
     const password = ref('')
     const confirmPassword = ref('')
@@ -69,10 +71,10 @@ export default {
     const validateEmail = () => {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!email.value) {
-        emailError.value = 'Email is required'
+        emailError.value = 'register.errors.emailRequired'
         isEmailValid.value = false
       } else if (!emailPattern.test(email.value)) {
-        emailError.value = 'Please enter a valid email address'
+        emailError.value = 'register.errors.invalidEmail'
         isEmailValid.value = false
       } else {
         emailError.value = ''
@@ -82,10 +84,10 @@ export default {
 
     const validatePassword = () => {
       if (!password.value) {
-        passwordError.value = 'Password is required'
+        passwordError.value = 'register.errors.passwordRequired'
         isPasswordValid.value = false
       } else if (password.value.length < 6) {
-        passwordError.value = 'Password must be at least 6 characters long'
+        passwordError.value = 'register.errors.passwordLength'
         isPasswordValid.value = false
       } else {
         passwordError.value = ''
@@ -95,10 +97,10 @@ export default {
 
     const validateConfirmPassword = () => {
       if (!confirmPassword.value) {
-        confirmPasswordError.value = 'Please confirm your password'
+        confirmPasswordError.value = 'register.errors.confirmPasswordRequired'
         isConfirmPasswordValid.value = false
       } else if (confirmPassword.value !== password.value) {
-        confirmPasswordError.value = 'Passwords do not match'
+        confirmPasswordError.value = 'register.errors.passwordMismatch'
         isConfirmPasswordValid.value = false
       } else {
         confirmPasswordError.value = ''
@@ -138,7 +140,7 @@ export default {
           const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
           const user = userCredential.user
           emit('register', user)
-          toast.success('Registration successful! You will be redirected to login form...', {
+          toast.success(t('register.successMessage'), {
             autoClose: 1000,
             onClose: () => {
               emit('toggle-form')
@@ -146,7 +148,7 @@ export default {
           })
         } catch (error) {
           console.log(error)
-          toast.error('Registration failed! ' + error, {
+          toast.error(t('register.errorMessage', { error: error.message }), {
             autoClose: 4000
           })
         }

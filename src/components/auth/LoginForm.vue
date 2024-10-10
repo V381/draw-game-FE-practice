@@ -1,35 +1,37 @@
 <template>
   <form @submit.prevent="submit" class="login-form">
-    <h2 class="login-form__title">Sign In</h2>
+    <h2 class="login-form__title">{{ $t('login.title') }}</h2>
     <div class="login-form__group">
       <Input
-        label="Email:"
+        :label="$t('login.email')"
         v-model="email"
-        :error="emailError"
+        :error="emailError ? $t(emailError) : ''"
         :isValid="isEmailValid"
-        placeholder="Enter your email..."
+        :placeholder="$t('login.emailPlaceholder')"
         type="email"
         @blur="validateEmail"
       />
     </div>
     <div class="login-form__group">
       <Input
-        label="Password:"
+        :label="$t('login.password')"
         v-model="password"
-        :error="passwordError"
+        :error="passwordError ? $t(passwordError) : ''"
         :isValid="isPasswordValid"
-        placeholder="Enter your password"
+        :placeholder="$t('login.passwordPlaceholder')"
         type="password"
         @blur="validatePassword"
       />
     </div>
     <div class="login-form__actions">
-      <button type="submit" class="login-form__submit-btn">Sign In</button>
+      <button type="submit" class="login-form__submit-btn">{{ $t('login.signIn') }}</button>
       <button type="button" @click="signInWithGoogle" class="login-form__google-btn">
         <img src="@/assets/google-icon.svg" alt="Google Icon" class="google-icon" />
-        Sign in with Google
+        {{ $t('login.signInWithGoogle') }}
       </button>
-      <a href="#" @click.prevent="$emit('toggle-form')" class="login-form__register-link">Register now</a>
+      <a href="#" @click.prevent="$emit('toggle-form')" class="login-form__register-link">
+        {{ $t('login.registerNow') }}
+      </a>
     </div>
   </form>
 </template>
@@ -42,7 +44,6 @@ import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 
 import { auth } from '@/firebase'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
-
 export default {
   name: 'LoginForm',
   components: {
@@ -62,10 +63,10 @@ export default {
     const validateEmail = () => {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!email.value) {
-        emailError.value = 'Email is required'
+        emailError.value = 'login.errors.emailRequired'
         isEmailValid.value = false
       } else if (!emailPattern.test(email.value)) {
-        emailError.value = 'Please enter a valid email address'
+        emailError.value = 'login.errors.invalidEmail'
         isEmailValid.value = false
       } else {
         emailError.value = ''
@@ -75,10 +76,10 @@ export default {
 
     const validatePassword = () => {
       if (!password.value) {
-        passwordError.value = 'Password is required'
+        passwordError.value = 'login.errors.passwordRequired'
         isPasswordValid.value = false
       } else if (password.value.length < 6) {
-        passwordError.value = 'Password must be at least 6 characters long'
+        passwordError.value = 'login.errors.passwordLength'
         isPasswordValid.value = false
       } else {
         passwordError.value = ''
@@ -236,4 +237,33 @@ export default {
     }
   }
 }
+
+.language-switcher {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+
+    &.active,
+    &:hover {
+      opacity: 1;
+    }
+
+    img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+    }
+  }
+}
+
 </style>

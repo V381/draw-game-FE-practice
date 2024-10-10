@@ -4,6 +4,7 @@ import Modal from '@/components/common/Modal.vue'
 import flushPromises from 'flush-promises'
 import { nextTick } from 'vue'
 import shuffleArray from '@/utils/shuffleArray'
+import { createI18n } from 'vue-i18n'
 
 jest.mock('vue-router', () => ({
   useRoute: () => ({
@@ -24,12 +25,44 @@ jest.mock('@/components/common/Modal.vue', () => ({
 
 jest.mock('@/utils/shuffleArray')
 
-describe('Testing DrawPage.vue component....', () => {
+describe('DrawPage.vue', () => {
   let wrapper
   let mockRouterPush
+  let i18n
+
+  const messages = {
+    en: {
+      lottery: {
+        drawTitle: 'Lottery Draw',
+        drawnNumbers: 'Drawn Numbers',
+        yourNumbers: 'Your Numbers',
+        totalWinnings: 'Total Winnings: {amount}€',
+        matchedNumbers: '{count} Matched Numbers',
+        threeMatches: 'Three Matches',
+        fourMatches: 'Four Matches',
+        fiveMatches: 'Five Matches',
+        winningTable: 'Winning Table',
+        matchingNumbers: 'Matching Numbers',
+        prize: 'Prize',
+        drawCompleted: 'Draw Completed!',
+        congratulations: 'Congratulations! You won {amount}€.',
+        betterLuckNextTime: "Sorry, you didn't win this time.",
+        saveToHistory: 'Save to History',
+        goBackToAction: 'Go Back to Action',
+        confirmLeave: 'The draw is in progress. Are you sure you want to leave?',
+        savedToHistory: 'Saved to history successfully!',
+        failedToSave: 'Failed to save to history: {error}'
+      }
+    }
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()
+
+    i18n = createI18n({
+      locale: 'en',
+      messages
+    })
 
     const sessionStorageMock = (() => {
       let store = {}
@@ -84,16 +117,7 @@ describe('Testing DrawPage.vue component....', () => {
 
     wrapper = mount(DrawPage, {
       global: {
-        mocks: {
-          $route: {
-            query: {
-              numbers: '1,2,3,4,5'
-            }
-          },
-          $router: {
-            push: mockRouterPush
-          }
-        },
+        plugins: [i18n],
         stubs: {
           Modal
         }

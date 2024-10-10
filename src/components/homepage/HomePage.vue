@@ -1,49 +1,56 @@
 <template>
-    <div class="lottery">
-      <div class="lottery__board">
-        <h2 class="lottery__title">Select 5 Numbers</h2>
-        <div class="lottery__numbers">
-          <button
-            v-for="number in numbers"
-            :key="number"
-            :class="['lottery__number-button', { 'lottery__number-button--selected': isSelected(number) }]"
-            @click="toggleNumber(number)"
-            :disabled="!isSelected(number) && selectedNumbers.length >= 5"
-          >
-            {{ number }}
-          </button>
-        </div>
-      </div>
-      <div class="lottery__selection">
-        <h2 class="lottery__title">Selected Numbers</h2>
-        <div class="lottery__selected-list">
-          <div
-            v-for="number in selectedNumbers"
-            :key="number"
-            class="lottery__selected-item"
-          >
-            <span>{{ number }}</span>
-            <button class="lottery__delete-button" @click="removeNumber(number)">✕</button>
-          </div>
-        </div>
+  <div class="lottery">
+    <div class="lottery__board">
+      <h2 class="lottery__title">{{ $t('lottery.title') }}</h2>
+      <div class="lottery__numbers">
         <button
-          class="lottery__submit-button"
-          :disabled="selectedNumbers.length !== 5"
-          @click="submitBet"
+          v-for="number in numbers"
+          :key="number"
+          :class="['lottery__number-button', { 'lottery__number-button--selected': isSelected(number) }]"
+          @click="toggleNumber(number)"
+          :disabled="!isSelected(number) && selectedNumbers.length >= 5"
+          :aria-label="$t('lottery.numberButton', { number })"
         >
-          Submit Bet
+          {{ number }}
         </button>
       </div>
     </div>
-  </template>
+    <div class="lottery__selection">
+      <h2 class="lottery__title">{{ $t('lottery.selectedNumbers') }}</h2>
+      <div class="lottery__selected-list">
+        <div
+          v-for="number in selectedNumbers"
+          :key="number"
+          class="lottery__selected-item"
+        >
+          <span>{{ number }}</span>
+          <button
+            class="lottery__delete-button"
+            @click="removeNumber(number)"
+            :aria-label="$t('lottery.removeNumber', { number })"
+          >✕</button>
+        </div>
+      </div>
+      <button
+        class="lottery__submit-button"
+        :disabled="selectedNumbers.length !== 5"
+        @click="submitBet"
+      >
+        {{ $t('lottery.submitBet') }}
+      </button>
+    </div>
+  </div>
+</template>
 
 <script>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'LotteryGame',
   setup () {
+    const { t } = useI18n()
     const numbers = ref(Array.from({ length: 30 }, (_, i) => i + 1))
     const selectedNumbers = ref([])
     const router = useRouter()
@@ -76,7 +83,8 @@ export default {
       isSelected,
       toggleNumber,
       removeNumber,
-      submitBet
+      submitBet,
+      t
     }
   }
 }
