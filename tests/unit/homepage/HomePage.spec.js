@@ -1,29 +1,32 @@
 
 import { mount } from '@vue/test-utils'
 import HomePage from '@/components/homepage/HomePage.vue'
-import { createRouter, createWebHistory } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
-const DrawPage = { template: '<div>Draw Page</div>' }
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [
-    { path: '/', name: 'Home', component: HomePage },
-    { path: '/draw', name: 'Draw', component: DrawPage }
-  ]
-})
+
+jest.mock('vue-i18n', () => ({
+  useI18n: jest.fn(() => ({
+    t: (key) => key,
+    locale: { value: 'en' }
+  }))
+}))
 
 describe('HomePage.vue', () => {
   let wrapper
 
-  beforeEach(async () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
     wrapper = mount(HomePage, {
       global: {
-        plugins: [router]
+
+        mocks: {
+          $t: (key) => key
+        }
       }
     })
-    await router.isReady()
   })
+
 
   afterEach(() => {
     wrapper.unmount()

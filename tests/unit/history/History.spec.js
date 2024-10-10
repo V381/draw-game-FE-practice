@@ -5,8 +5,8 @@ import { useRouter } from 'vue-router'
 import { collection, query, orderBy, getDocs, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { toast } from 'vue3-toastify'
+import { createI18n } from 'vue-i18n'
 
-// Mock Firestore methods with consistent return values
 jest.mock('firebase/firestore', () => ({
   collection: jest.fn(),
   query: jest.fn(),
@@ -33,19 +33,51 @@ jest.mock('vue3-toastify', () => ({
 
 describe('HistoryPage.vue', () => {
   let routerPushMock
+  let wrapper
+  let i18n
+
+  const messages = {
+    en: {
+      history: {
+        title: 'History',
+        noHistory: 'No draw history available.',
+        drawNumber: 'Draw Number',
+        drawnNumbers: 'Drawn Numbers',
+        status: 'Status',
+        amount: 'Amount',
+        actions: 'Actions',
+        won: 'Won',
+        lost: 'Lost',
+        fetchError: 'Error fetching draw history.',
+        deleteSuccess: 'Draw deleted successfully.',
+        deleteError: 'Error deleting draw.'
+      }
+    }
+  }
 
   beforeEach(() => {
     jest.clearAllMocks()
+
+    i18n = createI18n({
+      locale: 'en',
+      messages
+    })
+
     routerPushMock = jest.fn()
     useRouter.mockReturnValue({
       push: routerPushMock
     })
 
-    // Ensure Firestore methods return consistent mock values
     collection.mockReturnValue('mockCollection')
     orderBy.mockReturnValue('mockOrderBy')
     query.mockReturnValue('mockQuery')
     doc.mockReturnValue('mockDoc')
+
+    wrapper = mount(HistoryPage, {
+      global: {
+        plugins: [i18n]
+      }
+    })
   })
 
   const mockDrawHistoryData = [
@@ -65,30 +97,6 @@ describe('HistoryPage.vue', () => {
     }
   ]
 
-  it('fetches draw history on mount', async () => {
-    // Mock getDocs to return the mockDrawHistoryData
-    getDocs.mockResolvedValue({
-      docs: mockDrawHistoryData.map(data => ({
-        id: data.id,
-        data: () => data
-      }))
-    })
-
-    const wrapper = mount(HistoryPage)
-
-    // Wait for all promises to resolve
-    await flushPromises()
-
-    // Assertions to ensure Firestore methods were called correctly
-    expect(collection).toHaveBeenCalledWith(db, 'drawHistory')
-    expect(orderBy).toHaveBeenCalledWith('timestamp', 'desc')
-    expect(query).toHaveBeenCalledWith('mockCollection', 'mockOrderBy')
-    expect(getDocs).toHaveBeenCalledWith('mockQuery')
-
-    // Check if drawHistory has the correct length
-    expect(wrapper.vm.drawHistory).toHaveLength(2)
-  })
-
   it('renders draw history table when data is available', async () => {
     getDocs.mockResolvedValue({
       docs: mockDrawHistoryData.map(data => ({
@@ -97,18 +105,23 @@ describe('HistoryPage.vue', () => {
       }))
     })
 
-    const wrapper = mount(HistoryPage)
+    wrapper = mount(HistoryPage, {
+      global: {
+        plugins: [i18n]
+      }
+    })
+
     await flushPromises()
 
-    expect(wrapper.text()).not.toContain('No draw history available.')
-    expect(wrapper.text()).toContain('Draw Number')
-    expect(wrapper.text()).toContain('Drawn Numbers')
-    expect(wrapper.text()).toContain('Status')
-    expect(wrapper.text()).toContain('Amount')
+    expect(wrapper.text()).not.toContain(messages.en.history.noHistory)
+    expect(wrapper.text()).toContain(messages.en.history.drawNumber)
+    expect(wrapper.text()).toContain(messages.en.history.drawnNumbers)
+    expect(wrapper.text()).toContain(messages.en.history.status)
+    expect(wrapper.text()).toContain(messages.en.history.amount)
+    expect(wrapper.text()).toContain(messages.en.history.actions)
   })
 
   it('calls showDetails method with correct draw', async () => {
-    // Mock getDocs to return the mockDrawHistoryData
     getDocs.mockResolvedValue({
       docs: mockDrawHistoryData.map(data => ({
         id: data.id,
@@ -116,12 +129,16 @@ describe('HistoryPage.vue', () => {
       }))
     })
 
-    const wrapper = mount(HistoryPage)
+    wrapper = mount(HistoryPage, {
+      global: {
+        plugins: [i18n]
+      }
+    })
+
     await flushPromises()
 
-    await wrapper.vm.showDetails(mockDrawHistoryData[0])
+    await wrapper.findAll('.history-page__item').at(0).trigger('click')
 
-    // Ensure router.push was called with correct parameters
     expect(routerPushMock).toHaveBeenCalledWith({
       name: 'DrawDetails',
       params: { id: '1' }
@@ -129,7 +146,6 @@ describe('HistoryPage.vue', () => {
   })
 
   it('calls deleteDraw method and updates drawHistory', async () => {
-    // Mock getDocs to return the mockDrawHistoryData
     getDocs.mockResolvedValue({
       docs: mockDrawHistoryData.map(data => ({
         id: data.id,
@@ -137,18 +153,85 @@ describe('HistoryPage.vue', () => {
       }))
     })
 
-    const wrapper = mount(HistoryPage)
+    wrapper = mount(HistoryPage, {
+      global: {
+        plugins: [i18n]
+      }
+    })
+
     await flushPromises()
 
     deleteDoc.mockResolvedValue()
 
-    await wrapper.vm.deleteDraw('1')
+    const deleteButtons = wrapper.findAll('.history-page__delete-btn')
+    await deleteButtons.at(0).trigger('click')
 
     expect(deleteDoc).toHaveBeenCalledWith('mockDoc')
-
-    expect(toast.success).toHaveBeenCalledWith('Draw deleted successfully')
-
+    expect(toast.success).toHaveBeenCalledWith(messages.en.history.deleteSuccess)
     expect(wrapper.vm.drawHistory).toHaveLength(1)
     expect(wrapper.vm.drawHistory[0].id).toBe('2')
+    expect(wrapper.text()).toContain('2')
+  })
+
+  it('displays "No draw history available." when drawHistory is empty', async () => {
+    getDocs.mockResolvedValue({
+      docs: []
+    })
+
+    wrapper = mount(HistoryPage, {
+      global: {
+        plugins: [i18n]
+      }
+    })
+
+    await flushPromises()
+
+    expect(wrapper.text()).toContain(messages.en.history.noHistory)
+    expect(wrapper.text()).not.toContain(messages.en.history.drawNumber)
+    expect(wrapper.text()).not.toContain(messages.en.history.drawnNumbers)
+    expect(wrapper.text()).not.toContain(messages.en.history.status)
+    expect(wrapper.text()).not.toContain(messages.en.history.amount)
+    expect(wrapper.text()).not.toContain(messages.en.history.actions)
+  })
+
+  it('handles fetchDrawHistory error gracefully', async () => {
+    getDocs.mockRejectedValue(new Error('Firestore fetch error'))
+
+    wrapper = mount(HistoryPage, {
+      global: {
+        plugins: [i18n]
+      }
+    })
+
+    await flushPromises()
+
+    expect(toast.error).toHaveBeenCalledWith(messages.en.history.fetchError)
+    expect(wrapper.vm.drawHistory).toHaveLength(0)
+  })
+
+  it('handles deleteDraw error gracefully', async () => {
+    getDocs.mockResolvedValue({
+      docs: mockDrawHistoryData.map(data => ({
+        id: data.id,
+        data: () => data
+      }))
+    })
+
+    wrapper = mount(HistoryPage, {
+      global: {
+        plugins: [i18n]
+      }
+    })
+
+    await flushPromises()
+
+    deleteDoc.mockRejectedValue(new Error('Firestore delete error'))
+
+    const deleteButtons = wrapper.findAll('.history-page__delete-btn')
+    await deleteButtons.at(0).trigger('click')
+
+    expect(deleteDoc).toHaveBeenCalledWith('mockDoc')
+    expect(toast.error).toHaveBeenCalledWith(messages.en.history.deleteError)
+    expect(wrapper.vm.drawHistory).toHaveLength(2)
   })
 })

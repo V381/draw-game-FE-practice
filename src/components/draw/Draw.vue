@@ -1,9 +1,9 @@
 <template>
   <div class="draw-page">
-    <h1 class="draw-page__title">Lottery Draw</h1>
+    <h1 class="draw-page__title">{{ $t('lottery.drawTitle') }}</h1>
     <div class="draw-page__container">
       <div class="draw-page__section draw-page__section--drawn">
-        <h2 class="draw-page__subtitle">Drawn Numbers</h2>
+        <h2 class="draw-page__subtitle">{{ $t('lottery.drawnNumbers') }}</h2>
         <div class="draw-page__numbers">
           <span
             v-for="(number, index) in drawnNumbers"
@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="draw-page__section draw-page__section--user">
-        <h2 class="draw-page__subtitle">Your Numbers</h2>
+        <h2 class="draw-page__subtitle">{{ $t('lottery.yourNumbers') }}</h2>
         <div class="draw-page__numbers">
           <span
             v-for="number in userNumbers"
@@ -33,22 +33,22 @@
       </div>
     </div>
     <div class="draw-page__winnings">
-      <h2 class="draw-page__winnings-title">Total Winnings: {{ totalWinnings }}€</h2>
+      <h2 class="draw-page__winnings-title">{{ $t('lottery.totalWinnings', { amount: totalWinnings }) }}</h2>
       <div v-if="isWinning" class="draw-page__winnings-details">
-        <p>You have matched {{ matchedNumbers.length }} number(s)!</p>
+        <p>{{ $t('lottery.matchedNumbers', { count: matchedNumbers.length }) }}</p>
         <ul class="draw-page__winnings-list">
-          <li v-if="matchedNumbers.length === 3">3 matches: 5€</li>
-          <li v-else-if="matchedNumbers.length === 4">4 matches: 10€</li>
-          <li v-else-if="matchedNumbers.length === 5">5 matches: 20€</li>
+          <li v-if="matchedNumbers.length === 3">{{ $t('lottery.threeMatches') }}</li>
+          <li v-else-if="matchedNumbers.length === 4">{{ $t('lottery.fourMatches') }}</li>
+          <li v-else-if="matchedNumbers.length === 5">{{ $t('lottery.fiveMatches') }}</li>
         </ul>
       </div>
       <div class="draw-page__winning-table">
-        <h2 class="draw-page__subtitle">Winning Table</h2>
+        <h2 class="draw-page__subtitle">{{ $t('lottery.winningTable') }}</h2>
         <table class="draw-page__table">
           <thead>
             <tr>
-              <th>Matching Numbers</th>
-              <th>Prize</th>
+              <th>{{ $t('lottery.matchingNumbers') }}</th>
+              <th>{{ $t('lottery.prize') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -69,12 +69,12 @@
       </div>
     </div>
     <Modal v-model="showModal">
-      <h2>Draw Completed!</h2>
-      <p v-if="totalWinnings > 0">Congratulations! You won {{ totalWinnings }}€.</p>
-      <p v-else>Sorry, you didn't win this time.</p>
+      <h2>{{ $t('lottery.drawCompleted') }}</h2>
+      <p v-if="totalWinnings > 0">{{ $t('lottery.congratulations', { amount: totalWinnings }) }}</p>
+      <p v-else>{{ $t('lottery.betterLuckNextTime') }}</p>
       <div class="modal-buttons">
-        <button @click="saveToHistory" class="modal-button">Save to History</button>
-        <button @click="goToHome" class="modal-button">Go Back to Action</button>
+        <button @click="saveToHistory" class="modal-button">{{ $t('lottery.saveToHistory') }}</button>
+        <button @click="goToHome" class="modal-button">{{ $t('lottery.goBackToAction') }}</button>
       </div>
     </Modal>
   </div>
@@ -83,6 +83,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import Modal from '@/components/common/Modal.vue'
 import shuffleArray from '@/utils/shuffleArray'
 import { collection, addDoc } from 'firebase/firestore'
@@ -94,6 +95,7 @@ export default {
     Modal
   },
   setup () {
+    const { t } = useI18n()
     const route = useRoute()
     const router = useRouter()
     const showModal = ref(false)
@@ -176,7 +178,7 @@ export default {
 
     onBeforeRouteLeave((to, from, next) => {
       if (!isDrawComplete.value) {
-        const answer = window.confirm('The draw is in progress. Are you sure you want to leave?')
+        const answer = window.confirm(t('lottery.confirmLeave'))
         if (answer) {
           next()
         } else {
@@ -206,11 +208,11 @@ export default {
         history.push(newEntry)
         localStorage.setItem('drawHistory', JSON.stringify(history))
 
-        alert('Draw saved to history!')
+        alert(t('lottery.savedToHistory'))
         goToHome()
       } catch (error) {
         console.error('Error saving to history:', error)
-        alert(`Failed to save draw to history: ${error.message}`)
+        alert(t('lottery.failedToSave', { error: error.message }))
       }
     }
 

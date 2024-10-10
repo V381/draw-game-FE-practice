@@ -6,19 +6,19 @@
              :color="'#ffffff'"
              :background-color="'rgba(10, 31, 98, 0.9)'"
              loader="bars"/>
-    <h1 class="draw-details__title">Draw Details</h1>
+    <h1 class="draw-details__title">{{ $t('drawDetails.title') }}</h1>
     <table v-if="draw" class="draw-details__table">
       <tbody>
         <tr>
-          <th>Draw Date</th>
+          <th>{{ $t('drawDetails.drawDate') }}</th>
           <td>{{ formatDate(draw.timestamp) }}</td>
         </tr>
         <tr>
-          <th>Draw Number</th>
+          <th>{{ $t('drawDetails.drawNumber') }}</th>
           <td>{{ draw.id }}</td>
         </tr>
         <tr>
-          <th>Player Bet Numbers</th>
+          <th>{{ $t('drawDetails.playerBetNumbers') }}</th>
           <td>
             <div class="draw-details__numbers">
               <span
@@ -33,7 +33,7 @@
           </td>
         </tr>
         <tr>
-          <th>Drawn Numbers</th>
+          <th>{{ $t('drawDetails.drawnNumbers') }}</th>
           <td>
             <div class="draw-details__numbers">
               <span
@@ -47,24 +47,25 @@
           </td>
         </tr>
         <tr>
-          <th>Status</th>
+          <th>{{ $t('drawDetails.status') }}</th>
           <td :class="draw.totalWinnings > 0 ? 'draw-details__status--won' : 'draw-details__status--lost'">
-            {{ draw.totalWinnings > 0 ? 'Won' : 'Lost' }}
+            {{ draw.totalWinnings > 0 ? $t('drawDetails.won') : $t('drawDetails.lost') }}
           </td>
         </tr>
         <tr>
-          <th>Total Amount Won</th>
+          <th>{{ $t('drawDetails.totalAmountWon') }}</th>
           <td>{{ draw.totalWinnings }}€</td>
         </tr>
       </tbody>
     </table>
-    <button @click="goBack" class="draw-details__back-btn">Go Back</button>
+    <button @click="goBack" class="draw-details__back-btn">{{ $t('drawDetails.goBack') }}</button>
   </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import Loading from 'vue-loading-overlay'
@@ -78,6 +79,7 @@ export default {
   setup () {
     const route = useRoute()
     const router = useRouter()
+    const { t } = useI18n()
     const draw = ref(null)
     const isLoading = ref(true)
 
@@ -90,10 +92,10 @@ export default {
         if (docSnap.exists()) {
           draw.value = { id: docSnap.id, ...docSnap.data() }
         } else {
-          console.log('No such document!')
+          console.log(t('drawDetails.noSuchDocument'))
         }
       } catch (error) {
-        console.error('Error fetching draw details:', error)
+        console.error(t('drawDetails.errorFetchingDrawDetails'), error)
       } finally {
         isLoading.value = false
       }

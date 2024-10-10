@@ -7,15 +7,15 @@
              :background-color="'rgba(10, 31, 98, 0.9)'"
              loader="bars"/>
 
-    <h1 class="history-page__title">Draw History</h1>
-    <div v-if="drawHistory.length === 0" class="history-page__no-history"></div>
+    <h1 class="history-page__title">{{ $t('history.title') }}</h1>
+    <div v-if="drawHistory.length === 0" class="history-page__no-history">{{ $t('history.noHistory') }}</div>
     <div v-else class="history-page__list">
       <div class="history-page__header">
-        <span>Draw Number</span>
-        <span>Drawn Numbers</span>
-        <span>Status</span>
-        <span>Amount</span>
-        <span>Actions</span>
+        <span>{{ $t('history.drawNumber') }}</span>
+        <span>{{ $t('history.drawnNumbers') }}</span>
+        <span>{{ $t('history.status') }}</span>
+        <span>{{ $t('history.amount') }}</span>
+        <span>{{ $t('history.actions') }}</span>
       </div>
       <div
         v-for="(draw, index) in drawHistory"
@@ -38,7 +38,7 @@
           class="history-page__status"
           :class="draw.totalWinnings > 0 ? 'history-page__status--won' : 'history-page__status--lost'"
         >
-          {{ draw.totalWinnings > 0 ? 'Won' : 'Lost' }}
+          {{ draw.totalWinnings > 0 ? $t('history.won') : $t('history.lost') }}
         </span>
         <span>{{ draw.totalWinnings }}€</span>
         <button @click.stop="deleteDraw(draw.id)" class="history-page__delete-btn">
@@ -52,6 +52,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { collection, query, orderBy, getDocs, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { toast } from 'vue3-toastify'
@@ -65,6 +66,7 @@ export default {
   },
   setup () {
     const router = useRouter()
+    const { t } = useI18n()
     const drawHistory = ref([])
     const isLoading = ref(false)
 
@@ -79,7 +81,7 @@ export default {
         }))
       } catch (error) {
         console.error('Error fetching draw history:', error)
-        toast.error('Failed to fetch draw history')
+        toast.error(t('history.fetchError'))
       } finally {
         isLoading.value = false
       }
@@ -90,10 +92,10 @@ export default {
       try {
         await deleteDoc(doc(db, 'drawHistory', id))
         drawHistory.value = drawHistory.value.filter(draw => draw.id !== id)
-        toast.success('Draw deleted successfully')
+        toast.success(t('history.deleteSuccess'))
       } catch (error) {
         console.error('Error deleting draw:', error)
-        toast.error('Failed to delete draw')
+        toast.error(t('history.deleteError'))
       } finally {
         isLoading.value = false
       }
