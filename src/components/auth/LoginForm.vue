@@ -174,41 +174,40 @@ export default {
   width: 100%;
 
   &__title {
-    font-size: 2rem;
+    font-size: var(--font-size-xl);
     font-weight: bold;
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
     text-align: center;
-    color: var(--primary);
+    color: var(--color-primary);
   }
 
   &__group {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-lg);
   }
 
   &__actions {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: var(--spacing-md);
   }
 
   &__submit-btn,
   &__google-btn {
     width: 100%;
-    padding: 0.75rem;
+    padding: var(--spacing-sm) var(--spacing-md);
     font-weight: bold;
     border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-md);
   }
 
   &__submit-btn {
-    background-color: var(--btn-bg);
-    color: #ffffff;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
 
     &:hover {
-      background-color: var(--btn-hover-bg);
+      background-color: var(--bg-secondary);
     }
   }
 
@@ -216,48 +215,47 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff;
-    color: #757575;
-    border: 1px solid #dadce0;
+    background-color: var(--color-white);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-secondary);
 
     &:hover {
-      background-color: #f5f5f5;
+      background-color: var(--border-secondary);
     }
 
     .google-icon {
       width: 18px;
       height: 18px;
-      margin-right: 8px;
+      margin-right: var(--spacing-sm);
     }
   }
 
   &__register-link {
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
     font-weight: 500;
-    color: #00B0FF;
+    color: var(--color-secondary);
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: color var(--transition-default);
 
     &:hover {
-      color: var(--btn-hover-bg);
+      color: var(--bg-secondary);
     }
   }
 }
 
 .language-switcher {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
   display: flex;
-  gap: 10px;
+  gap: var(--spacing-sm);
 
   button {
     background: none;
     border: none;
-    cursor: pointer;
     padding: 0;
     opacity: 0.6;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-default);
 
     &.active,
     &:hover {
@@ -273,9 +271,8 @@ export default {
 }
 
 .error-message {
-  color: #d32f2f;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-xs);
 }
-
 </style>

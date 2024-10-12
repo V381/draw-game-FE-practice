@@ -125,91 +125,93 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .draw-details {
-  padding: 20px;
-  background-color: #005baa;
-  color: white;
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
-}
 
-.draw-details__title {
-  font-size: 28px;
-  margin-bottom: 20px;
-  text-align: center;
-}
+  &__title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+  }
 
-.draw-details__table {
-  width: 100%;
-  max-width: 600px;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
+  &__table {
+    width: 100%;
+    max-width: 600px;
+    border-collapse: collapse;
+    margin-top: var(--spacing-md);
 
-.draw-details__table th,
-.draw-details__table td {
-  border: 1px solid #0077be;
-  padding: 12px;
-  text-align: left;
-}
+    th,
+    td {
+      border: 1px solid var(--border-primary);
+      padding: var(--spacing-sm);
+      text-align: left;
+    }
 
-.draw-details__table th {
-  background-color: #003366;
-  width: 40%;
-}
+    th {
+      background-color: var(--bg-secondary);
+      width: 40%;
+    }
 
-.draw-details__table tr:nth-child(even) {
-  background-color: #0068c3;
-}
+    tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
 
-.draw-details__numbers {
-  display: flex;
-  flex-wrap: wrap;
-}
+  &__numbers {
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-.draw-details__number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  font-size: 14px;
-  border: 1px solid white;
-  border-radius: 50%;
-  margin: 2px;
-  background-color: #0077be;
-}
+  &__number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    font-size: var(--font-size-sm);
+    border: 1px solid var(--border-primary);
+    border-radius: 50%;
+    margin: var(--spacing-xs);
+    background-color: var(--bg-secondary);
 
-.draw-details__number--winning {
-  background-color: #4caf50;
-}
+    &--winning {
+      background-color: var(--bg-success);
+    }
+  }
 
-.draw-details__status--won {
-  color: #4caf50;
-  font-weight: bold;
-}
+  &__status {
+    &--won {
+      color: var(--color-success);
+      font-weight: bold;
+    }
 
-.draw-details__status--lost {
-  color: #f44336;
-  font-weight: bold;
-}
+    &--lost {
+      color: var(--color-danger);
+      font-weight: bold;
+    }
+  }
 
-.draw-details__back-btn {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #003366;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
+  &__back-btn {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-size: var(--font-size-md);
+    transition: background-color var(--transition-default);
 
-.draw-details__back-btn:hover {
-  background-color: #002244;
+    &:hover {
+      background-color: var(--bg-primary);
+    }
+  }
 }
 
 :deep(.vl-overlay) {
@@ -217,11 +219,10 @@ export default {
 }
 
 :deep(.vl-icon) {
-  stroke: #ffffff !important;
+  stroke: var(--color-white) !important;
 }
 
 :deep(.vl-backdrop) {
   backdrop-filter: blur(5px);
 }
-
 </style>

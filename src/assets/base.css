@@ -1,18 +1,67 @@
 :root {
-    --primary: #0A1F62;
-    --btn-bg:  #00B0FF;
-    --btn-hover-bg: #0091EA; 
-}
+    /* Colors */
+    --color-primary: #005baa;
+    --color-secondary: #00aeef;
+    --color-success: #4caf50;
+    --color-warning: #ff9800;
+    --color-danger: #ff6b6b;
+    --color-white: #ffffff;
+    --color-black: #000000;
+  
+    /* Background Colors */
+    --bg-primary: var(--color-primary);
+    --bg-secondary: var(--color-secondary);
+    --bg-success: var(--color-success);
+    --bg-warning: var(--color-warning);
+    --bg-danger: var(--color-danger);
+  
+    /* Text Colors */
+    --text-primary: var(--color-white);
+    --text-secondary: var(--color-black);
+  
+    /* Border Colors */
+    --border-primary: var(--color-secondary);
+    --border-secondary: rgba(255, 255, 255, 0.2);
+  
+    /* Spacing */
+    --spacing-xs: 5px;
+    --spacing-sm: 10px;
+    --spacing-md: 20px;
+    --spacing-lg: 40px;
+  
+    /* Font Sizes */
+    --font-size-sm: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 24px;
+    --font-size-xl: 32px;
+  
+    /* Border Radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+  
+    /* Transitions */
+    --transition-default: 0.3s ease;
+  
+    /* Z-index */
+    --z-index-modal: 1000;
+  }
+  
+  /* Global Styles */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+  }
 
-* {
+  * {
     margin: 0;
-    padding: 0;
-}
-
-body {
-    background-image: url('./background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
+  }
+  
+  button {
+    cursor: pointer;
+    transition: background-color var(--transition-default);
+  }
+  
+  button:disabled {
+    cursor: not-allowed;
+  }

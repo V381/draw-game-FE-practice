@@ -128,97 +128,99 @@ export default {
 </script>
 
 <style scoped>
-  .history-page {
-    padding: 20px;
-  }
+.history-page {
+  padding: var(--spacing-md);
+}
 
-  .history-page__title {
-    margin-bottom: 20px;
-  }
+.history-page__title {
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-xl);
+}
 
-  .history-page__no-history {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 18px;
-  }
+.history-page__no-history {
+  text-align: center;
+  margin-top: var(--spacing-md);
+  font-size: var(--font-size-lg);
+}
 
-  .history-page__list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+.history-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
 
-  .history-page__header,
-  .history-page__item {
-    display: grid;
-    grid-template-columns: 0.5fr 2fr 0.5fr 0.5fr 0.5fr;
-    align-items: center;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.8rem;
-  }
+.history-page__header,
+.history-page__item {
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 0.5fr 0.5fr 0.5fr;
+  align-items: center;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+}
 
-  .history-page__header {
-    background-color: #0A1F62;
-    color: white;
-    font-weight: bold;
-  }
+.history-page__header {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-weight: bold;
+}
 
-  .history-page__item {
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
+.history-page__item {
+  cursor: pointer;
+  transition: background-color var(--transition-default);
+}
 
-  .history-page__item:hover {
-    background-color: var(--btn-hover-bg);
-  }
+.history-page__item:hover {
+  background-color: var(--bg-secondary);
+}
 
-  .history-page__numbers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
+.history-page__numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
 
-  .history-page__draw-number {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-  }
+.history-page__draw-number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border-secondary);
+  border-radius: 50%;
+}
 
-  .history-page__draw-number--winning {
-    background-color: #4caf50;
-    color: white;
-  }
+.history-page__draw-number--winning {
+  background-color: var(--bg-success);
+  color: var(--text-primary);
+}
 
-  .history-page__status--won {
-    color: green;
-  }
+.history-page__status--won {
+  color: var(--color-success);
+}
 
-  .history-page__status--lost {
-    color: red;
-  }
+.history-page__status--lost {
+  color: var(--color-danger);
+}
 
-  .history-page__delete-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    text-align: left;
-  }
-  :deep(.vl-overlay) {
+.history-page__delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-lg);
+  text-align: left;
+}
+
+:deep(.vl-overlay) {
   background-color: rgba(10, 31, 98, 0.9) !important;
 }
 
 :deep(.vl-icon) {
-  stroke: #ffffff !important;
+  stroke: var(--color-white) !important;
 }
 
 :deep(.vl-backdrop) {
   backdrop-filter: blur(5px);
 }
-  </style>
+</style>
