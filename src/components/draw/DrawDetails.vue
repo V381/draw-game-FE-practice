@@ -1,31 +1,34 @@
 <template>
-  <div class="draw-details">
+  <div class="draw-details" role="main">
     <loading v-model:active="isLoading"
              :can-cancel="false"
              :is-full-page="false"
              :color="'#ffffff'"
              :background-color="'rgba(10, 31, 98, 0.9)'"
-             loader="bars"/>
+             loader="bars"
+             aria-label="Loading draw details"/>
     <h1 class="draw-details__title">{{ $t('drawDetails.title') }}</h1>
-    <table v-if="draw" class="draw-details__table">
+    <table v-if="draw" class="draw-details__table" aria-labelledby="draw-details-title">
       <tbody>
         <tr>
-          <th>{{ $t('drawDetails.drawDate') }}</th>
+          <th scope="row">{{ $t('drawDetails.drawDate') }}</th>
           <td>{{ formatDate(draw.timestamp) }}</td>
         </tr>
         <tr>
-          <th>{{ $t('drawDetails.drawNumber') }}</th>
+          <th scope="row">{{ $t('drawDetails.drawNumber') }}</th>
           <td>{{ draw.id }}</td>
         </tr>
         <tr>
-          <th>{{ $t('drawDetails.playerBetNumbers') }}</th>
+          <th scope="row">{{ $t('drawDetails.playerBetNumbers') }}</th>
           <td>
-            <div class="draw-details__numbers">
+            <div class="draw-details__numbers" role="list" aria-label="Player bet numbers">
               <span
                 v-for="number in draw.playerBet"
                 :key="number"
                 class="draw-details__number"
                 :class="{ 'draw-details__number--winning': draw.drawnNumbers.includes(number) }"
+                role="listitem"
+                :aria-label="number + (draw.drawnNumbers.includes(number) ? ', winning number' : '')"
               >
                 {{ number }}
               </span>
@@ -33,13 +36,14 @@
           </td>
         </tr>
         <tr>
-          <th>{{ $t('drawDetails.drawnNumbers') }}</th>
+          <th scope="row">{{ $t('drawDetails.drawnNumbers') }}</th>
           <td>
-            <div class="draw-details__numbers">
+            <div class="draw-details__numbers" role="list" aria-label="Drawn numbers">
               <span
                 v-for="number in draw.drawnNumbers"
                 :key="number"
                 class="draw-details__number"
+                role="listitem"
               >
                 {{ number }}
               </span>
@@ -47,13 +51,13 @@
           </td>
         </tr>
         <tr>
-          <th>{{ $t('drawDetails.status') }}</th>
+          <th scope="row">{{ $t('drawDetails.status') }}</th>
           <td :class="draw.totalWinnings > 0 ? 'draw-details__status--won' : 'draw-details__status--lost'">
             {{ draw.totalWinnings > 0 ? $t('drawDetails.won') : $t('drawDetails.lost') }}
           </td>
         </tr>
         <tr>
-          <th>{{ $t('drawDetails.totalAmountWon') }}</th>
+          <th scope="row">{{ $t('drawDetails.totalAmountWon') }}</th>
           <td>{{ draw.totalWinnings }}€</td>
         </tr>
       </tbody>

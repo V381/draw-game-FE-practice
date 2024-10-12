@@ -1,35 +1,39 @@
 <template>
-  <div class="history-page">
+  <div class="history-page" role="main">
     <loading v-model:active="isLoading"
              :can-cancel="false"
              :is-full-page="false"
              :color="'#ffffff'"
              :background-color="'rgba(10, 31, 98, 0.9)'"
-             loader="bars"/>
+             loader="bars"
+             aria-label="Loading content"/>
 
     <h1 class="history-page__title">{{ $t('history.title') }}</h1>
-    <div v-if="drawHistory.length === 0" class="history-page__no-history">{{ $t('history.noHistory') }}</div>
-    <div v-else class="history-page__list">
-      <div class="history-page__header">
-        <span>{{ $t('history.drawNumber') }}</span>
-        <span>{{ $t('history.drawnNumbers') }}</span>
-        <span>{{ $t('history.status') }}</span>
-        <span>{{ $t('history.amount') }}</span>
-        <span>{{ $t('history.actions') }}</span>
+    <div v-if="drawHistory.length === 0" class="history-page__no-history" role="status">{{ $t('history.noHistory') }}</div>
+    <div v-else class="history-page__list" role="table" aria-label="Draw History">
+      <div class="history-page__header" role="row">
+        <span role="columnheader">{{ $t('history.drawNumber') }}</span>
+        <span role="columnheader">{{ $t('history.drawnNumbers') }}</span>
+        <span role="columnheader">{{ $t('history.status') }}</span>
+        <span role="columnheader">{{ $t('history.amount') }}</span>
+        <span role="columnheader">{{ $t('history.actions') }}</span>
       </div>
       <div
         v-for="(draw, index) in drawHistory"
         :key="draw.id"
         @click="showDetails(draw)"
         class="history-page__item"
+        role="row"
+        :aria-label="$t('history.drawDetails', { number: drawHistory.length - index })"
       >
-        <span>{{ drawHistory.length - index }}</span>
-        <div class="history-page__numbers">
+        <span role="cell">{{ drawHistory.length - index }}</span>
+        <div class="history-page__numbers" role="cell">
           <span
             v-for="number in draw.drawnNumbers"
             :key="number"
             class="history-page__draw-number"
             :class="{ 'history-page__draw-number--winning': draw.playerBet.includes(number) }"
+            :aria-label="number + (draw.playerBet.includes(number) ? ' (winning)' : '')"
           >
             {{ number }}
           </span>
@@ -37,11 +41,17 @@
         <span
           class="history-page__status"
           :class="draw.totalWinnings > 0 ? 'history-page__status--won' : 'history-page__status--lost'"
+          role="cell"
         >
           {{ draw.totalWinnings > 0 ? $t('history.won') : $t('history.lost') }}
         </span>
-        <span>{{ draw.totalWinnings }}€</span>
-        <button @click.stop="deleteDraw(draw.id)" class="history-page__delete-btn">
+        <span role="cell">{{ draw.totalWinnings }}€</span>
+        <button
+          @click.stop="deleteDraw(draw.id)"
+          class="history-page__delete-btn"
+          role="cell"
+          :aria-label="$t('history.deleteDraw', { number: drawHistory.length - index })"
+        >
           🗑️
         </button>
       </div>
@@ -146,6 +156,7 @@ export default {
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 0.8rem;
   }
 
   .history-page__header {
@@ -197,6 +208,7 @@ export default {
     border: none;
     cursor: pointer;
     font-size: 18px;
+    text-align: left;
   }
   :deep(.vl-overlay) {
   background-color: rgba(10, 31, 98, 0.9) !important;
