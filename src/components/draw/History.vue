@@ -156,6 +156,7 @@ export default {
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 0.8rem;
   }
 
   .history-page__header {
@@ -207,6 +208,7 @@ export default {
     border: none;
     cursor: pointer;
     font-size: 18px;
+    text-align: left;
   }
   :deep(.vl-overlay) {
   background-color: rgba(10, 31, 98, 0.9) !important;
