@@ -1,6 +1,6 @@
 <template>
-  <form @submit.prevent="submit" class="register-form">
-    <h2 class="register-form__title">{{ $t('register.title') }}</h2>
+  <form @submit.prevent="submit" class="register-form" aria-labelledby="register-form-title">
+    <h2 id="register-form-title" class="register-form__title">{{ $t('register.title') }}</h2>
     <div class="register-form__group">
       <Input
         :label="$t('register.email')"
@@ -10,6 +10,9 @@
         :placeholder="$t('register.emailPlaceholder')"
         type="email"
         @blur="validateEmail"
+        aria-required="true"
+        :aria-invalid="!isEmailValid"
+        :aria-describedby="emailError ? 'email-error' : undefined"
       />
     </div>
     <div class="register-form__group">
@@ -21,6 +24,9 @@
         :placeholder="$t('register.passwordPlaceholder')"
         type="password"
         @blur="validatePassword"
+        aria-required="true"
+        :aria-invalid="!isPasswordValid"
+        :aria-describedby="passwordError ? 'password-error' : undefined"
       />
     </div>
     <div class="register-form__group">
@@ -32,11 +38,16 @@
         :placeholder="$t('register.confirmPasswordPlaceholder')"
         type="password"
         @blur="validateConfirmPassword"
+        aria-required="true"
+        :aria-invalid="!isConfirmPasswordValid"
+        :aria-describedby="confirmPasswordError ? 'confirm-password-error' : undefined"
       />
     </div>
     <div class="register-form__actions">
       <button type="submit" class="register-form__submit-btn">{{ $t('register.submit') }}</button>
-      <a href="#" @click.prevent="$emit('toggle-form')" class="register-form__signin-link">{{ $t('register.backToSignIn') }}</a>
+      <a href="#" @click.prevent="$emit('toggle-form')" class="register-form__signin-link" aria-label="{{ $t('register.backToSignIn') }}">
+        {{ $t('register.backToSignIn') }}
+      </a>
     </div>
   </form>
 </template>
@@ -225,4 +236,9 @@ export default {
       }
     }
   }
+.error-message {
+  color: #d32f2f;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
   </style>

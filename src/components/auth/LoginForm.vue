@@ -1,6 +1,6 @@
 <template>
-  <form @submit.prevent="submit" class="login-form">
-    <h2 class="login-form__title">{{ $t('login.title') }}</h2>
+  <form @submit.prevent="submit" class="login-form" aria-labelledby="login-form-title">
+    <h2 id="login-form-title" class="login-form__title">{{ $t('login.title') }}</h2>
     <div class="login-form__group">
       <Input
         :label="$t('login.email')"
@@ -10,6 +10,9 @@
         :placeholder="$t('login.emailPlaceholder')"
         type="email"
         @blur="validateEmail"
+        aria-required="true"
+        :aria-invalid="!isEmailValid"
+        :aria-describedby="emailError ? 'email-error' : undefined"
       />
     </div>
     <div class="login-form__group">
@@ -21,12 +24,15 @@
         :placeholder="$t('login.passwordPlaceholder')"
         type="password"
         @blur="validatePassword"
+        aria-required="true"
+        :aria-invalid="!isPasswordValid"
+        :aria-describedby="passwordError ? 'password-error' : undefined"
       />
     </div>
     <div class="login-form__actions">
       <button type="submit" class="login-form__submit-btn">{{ $t('login.signIn') }}</button>
-      <button type="button" @click="signInWithGoogle" class="login-form__google-btn">
-        <img src="@/assets/google-icon.svg" alt="Google Icon" class="google-icon" />
+      <button type="button" @click="signInWithGoogle" class="login-form__google-btn" aria-label="Sign in with Google">
+        <img src="@/assets/google-icon.svg" alt="" aria-hidden="true" class="google-icon" />
         {{ $t('login.signInWithGoogle') }}
       </button>
       <a href="#" @click.prevent="$emit('toggle-form')" class="login-form__register-link">
@@ -264,6 +270,12 @@ export default {
       border-radius: 50%;
     }
   }
+}
+
+.error-message {
+  color: #d32f2f;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 }
 
 </style>

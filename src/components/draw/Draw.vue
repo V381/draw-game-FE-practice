@@ -1,16 +1,18 @@
 <template>
-  <div class="draw-page">
+  <div class="draw-page" role="main">
     <h1 class="draw-page__title">{{ $t('lottery.drawTitle') }}</h1>
     <div class="draw-page__container">
       <div class="draw-page__section draw-page__section--drawn">
         <h2 class="draw-page__subtitle">{{ $t('lottery.drawnNumbers') }}</h2>
-        <div class="draw-page__numbers">
+        <div class="draw-page__numbers" role="list" aria-label="Drawn numbers">
           <span
             v-for="(number, index) in drawnNumbers"
             :key="index"
             :class="['draw-page__number', {
               'draw-page__number--matched': userNumbers.includes(number)
             }]"
+            role="listitem"
+            :aria-label="number + (userNumbers.includes(number) ? ', matched' : '')"
           >
             {{ number }}
           </span>
@@ -18,7 +20,7 @@
       </div>
       <div class="draw-page__section draw-page__section--user">
         <h2 class="draw-page__subtitle">{{ $t('lottery.yourNumbers') }}</h2>
-        <div class="draw-page__numbers">
+        <div class="draw-page__numbers" role="list" aria-label="Your numbers">
           <span
             v-for="number in userNumbers"
             :key="number"
@@ -26,6 +28,8 @@
               'draw-page__number--matched': matchedNumbers.includes(number),
               'draw-page__number--winning': isWinning && matchedNumbers.length >= 3
             }]"
+            role="listitem"
+            :aria-label="number + (matchedNumbers.includes(number) ? ', matched' : '')"
           >
             {{ number }}
           </span>
@@ -36,7 +40,7 @@
       <h2 class="draw-page__winnings-title">{{ $t('lottery.totalWinnings', { amount: totalWinnings }) }}</h2>
       <div v-if="isWinning" class="draw-page__winnings-details">
         <p>{{ $t('lottery.matchedNumbers', { count: matchedNumbers.length }) }}</p>
-        <ul class="draw-page__winnings-list">
+        <ul class="draw-page__winnings-list" aria-label="Winnings details">
           <li v-if="matchedNumbers.length === 3">{{ $t('lottery.threeMatches') }}</li>
           <li v-else-if="matchedNumbers.length === 4">{{ $t('lottery.fourMatches') }}</li>
           <li v-else-if="matchedNumbers.length === 5">{{ $t('lottery.fiveMatches') }}</li>
@@ -44,11 +48,11 @@
       </div>
       <div class="draw-page__winning-table">
         <h2 class="draw-page__subtitle">{{ $t('lottery.winningTable') }}</h2>
-        <table class="draw-page__table">
+        <table class="draw-page__table" aria-label="Winning table">
           <thead>
             <tr>
-              <th>{{ $t('lottery.matchingNumbers') }}</th>
-              <th>{{ $t('lottery.prize') }}</th>
+              <th scope="col">{{ $t('lottery.matchingNumbers') }}</th>
+              <th scope="col">{{ $t('lottery.prize') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -68,8 +72,8 @@
         </table>
       </div>
     </div>
-    <Modal v-model="showModal">
-      <h2>{{ $t('lottery.drawCompleted') }}</h2>
+    <Modal v-model="showModal" aria-labelledby="modal-title">
+      <h2 id="modal-title">{{ $t('lottery.drawCompleted') }}</h2>
       <p v-if="totalWinnings > 0">{{ $t('lottery.congratulations', { amount: totalWinnings }) }}</p>
       <p v-else>{{ $t('lottery.betterLuckNextTime') }}</p>
       <div class="modal-buttons">
