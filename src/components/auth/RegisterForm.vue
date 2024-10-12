@@ -185,60 +185,61 @@ export default {
 }
 </script>
 
-  <style lang="scss" scoped>
-  .register-form {
+<style lang="scss" scoped>
+.register-form {
+  width: 100%;
+
+  &__title {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+    color: var(--text-secondary);
+  }
+
+  &__group {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  &__submit-btn {
     width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-weight: bold;
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: background-color var(--transition-default);
 
-    &__title {
-      font-size: 2rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-      text-align: center;
-      color: #333333;
-    }
-
-    &__group {
-      margin-bottom: 1.5rem;
-    }
-
-    &__actions {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    &__submit-btn {
-      width: 100%;
-      padding: 0.75rem;
-      background-color: var(--btn-bg);
-      color: #ffffff;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background-color: var(--btn-hover-bg);
-      }
-    }
-
-    &__signin-link {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #00B0FF;
-      text-decoration: none;
-      transition: color 0.3s ease;
-
-      &:hover {
-        color: var(--btn-hover-bg);
-      }
+    &:hover {
+      background-color: var(--bg-secondary);
     }
   }
-.error-message {
-  color: #d32f2f;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+
+  &__signin-link {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-secondary);
+    text-decoration: none;
+    transition: color var(--transition-default);
+
+    &:hover {
+      color: var(--bg-secondary);
+    }
+  }
 }
-  </style>
+
+.error-message {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-xs);
+}
+</style>
