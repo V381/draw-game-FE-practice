@@ -8,6 +8,7 @@
       "signIn": "Sign In",
       "signInWithGoogle": "Sign in with Google",
       "registerNow": "Register now",
+      "signInWithGitHub": "Sign in with Github",
       "errors": {
         "emailRequired": "Email is required",
         "invalidEmail": "Please enter a valid email address",

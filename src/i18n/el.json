@@ -8,6 +8,7 @@
       "signIn": "Σύνδεση",
       "signInWithGoogle": "Σύνδεση με Google",
       "registerNow": "Εγγραφείτε τώρα",
+      "signInWithGitHub": "Σύνδεση με Github",
       "errors": {
         "emailRequired": "Το email είναι υποχρεωτικό",
         "invalidEmail": "Παρακαλώ εισάγετε ένα έγκυρο email",
