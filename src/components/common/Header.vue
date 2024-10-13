@@ -14,8 +14,10 @@
       </ul>
     </nav>
     <div class="header__player-indicator">
-      <div class="header__avatar">
+      <div v-if="user" class="header__avatar">
+        <img v-if="isGitHubUser" :src="user.photoURL" :alt="user.displayName" class="header__avatar-img" />
         <svg
+          v-else
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
@@ -28,6 +30,7 @@
           />
         </svg>
       </div>
+      <span v-if="user" class="header__username">{{ user.displayName }}</span>
       <button @click="logout" class="header__logout-button">Logout</button>
     </div>
   </header>
@@ -36,13 +39,15 @@
 <script>
 import { getAuth, signOut } from 'firebase/auth'
 import { useRouter, useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 
 export default {
   name: 'main-header',
   setup () {
     const router = useRouter()
     const route = useRoute()
+    const user = ref(null)
+    const isGitHubUser = ref(false)
 
     const logout = async () => {
       const auth = getAuth()
@@ -50,6 +55,8 @@ export default {
         await signOut(auth)
         sessionStorage.removeItem('betSubmitted')
         sessionStorage.removeItem('selectedNumbers')
+        user.value = null
+        isGitHubUser.value = false
         router.push('/')
       } catch (error) {
         console.error('Logout error:', error)
@@ -66,12 +73,27 @@ export default {
     const isLiveDrawPage = computed(() => route.path === '/live-draw')
     const isHistoryPage = computed(() => route.path === '/history')
 
+    onMounted(() => {
+      const auth = getAuth()
+      auth.onAuthStateChanged((currentUser) => {
+        if (currentUser) {
+          user.value = currentUser
+          isGitHubUser.value = currentUser.providerData.some(provider => provider.providerId === 'github.com')
+        } else {
+          user.value = null
+          isGitHubUser.value = false
+        }
+      })
+    })
+
     return {
       logout,
       canAccessLiveDraw,
       isHomePage,
       isLiveDrawPage,
-      isHistoryPage
+      isHistoryPage,
+      user,
+      isGitHubUser
     }
   }
 }
@@ -120,12 +142,23 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 
     &-icon {
       width: 30px;
       height: 30px;
       color: #0A1F62;
     }
+
+    &-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__username {
+    font-weight: bold;
   }
 
   &__logout-button {
@@ -133,7 +166,6 @@ export default {
     border: 2px solid white;
     color: white;
     padding: 8px 16px;
-
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;

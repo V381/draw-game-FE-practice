@@ -35,6 +35,10 @@
         <img src="@/assets/google-icon.svg" alt="" aria-hidden="true" class="google-icon" />
         {{ $t('login.signInWithGoogle') }}
       </button>
+      <button type="button" @click="signInWithGitHub" class="login-form__github-btn" aria-label="Sign in with GitHub">
+        <img src="@/assets/github-mark.png" alt="" aria-hidden="true" class="github-icon" />
+        {{ $t('login.signInWithGitHub') }}
+      </button>
       <a href="#" @click.prevent="$emit('toggle-form')" class="login-form__register-link">
         {{ $t('login.registerNow') }}
       </a>
@@ -46,7 +50,7 @@
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import Input from '@/components/common/Input.vue'
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth'
 import { auth } from '@/firebase'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
@@ -153,6 +157,26 @@ export default {
       }
     }
 
+    const signInWithGitHub = async () => {
+      try {
+        const provider = new GithubAuthProvider()
+        const userCredential = await signInWithPopup(auth, provider)
+        const user = userCredential.user
+        emit('login', user)
+        toast.success('GitHub sign-in successful!', {
+          autoClose: 1000,
+          onClose: () => {
+            router.push('/home')
+          }
+        })
+      } catch (error) {
+        console.error('Error signing in with GitHub:', error.message)
+        toast.error('GitHub sign-in failed. Please try again.', {
+          autoClose: 3000
+        })
+      }
+    }
+
     return {
       email,
       password,
@@ -163,7 +187,8 @@ export default {
       validateEmail,
       validatePassword,
       submit,
-      signInWithGoogle
+      signInWithGoogle,
+      signInWithGitHub
     }
   }
 }
@@ -193,6 +218,7 @@ export default {
   }
 
   &__submit-btn,
+  &__github-btn,
   &__google-btn {
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
@@ -211,7 +237,8 @@ export default {
     }
   }
 
-  &__google-btn {
+  &__google-btn,
+  &__github-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -223,13 +250,19 @@ export default {
       background-color: var(--border-secondary);
     }
 
-    .google-icon {
+    .google-icon,
+    .github-icon {
       width: 18px;
       height: 18px;
       margin-right: var(--spacing-sm);
     }
   }
 
+  &__github-btn {
+    background-color: white;
+    color: var(--color-white);
+    color: black;
+  }
   &__register-link {
     font-size: var(--font-size-sm);
     font-weight: 500;
