@@ -127,89 +127,137 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .history-page {
-  padding: var(--spacing-md);
-}
-
-.history-page__title {
-  margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-xl);
-}
-
-.history-page__no-history {
-  text-align: center;
-  margin-top: var(--spacing-md);
-  font-size: var(--font-size-lg);
-}
-
-.history-page__list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.history-page__header,
-.history-page__item {
-  display: grid;
-  grid-template-columns: 0.5fr 2fr 0.5fr 0.5fr 0.5fr;
-  align-items: center;
-  padding: var(--spacing-sm);
-  border: 1px solid var(--border-secondary);
-  border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-sm);
-}
-
-.history-page__header {
+  padding: var(--spacing-lg);
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-weight: bold;
-}
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 
-.history-page__item {
-  cursor: pointer;
-  transition: background-color var(--transition-default);
-}
+  &__title {
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-xl);
+    color: var(--color-secondary);
+    text-align: center;
+  }
 
-.history-page__item:hover {
-  background-color: var(--bg-secondary);
-}
+  &__no-history {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    font-size: var(--font-size-lg);
+    color: var(--color-secondary);
+  }
 
-.history-page__numbers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-xs);
-}
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
 
-.history-page__draw-number {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid var(--border-secondary);
-  border-radius: 50%;
-}
+  &__header,
+  &__item {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 0.5fr 0.5fr 0.5fr;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-default);
 
-.history-page__draw-number--winning {
-  background-color: var(--bg-success);
-  color: var(--text-primary);
-}
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: var(--spacing-sm);
+    }
+  }
 
-.history-page__status--won {
-  color: var(--color-success);
-}
+  &__header {
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid var(--color-secondary);
+    border-radius: var(--border-radius-sm);
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
 
-.history-page__status--lost {
-  color: var(--color-danger);
-}
+  &__item {
+    background-color: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    backdrop-filter: blur(5px);
 
-.history-page__delete-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: var(--font-size-lg);
-  text-align: left;
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      grid-template-areas:
+        "number numbers numbers"
+        "status amount actions";
+
+      > :nth-child(1) { grid-area: number; }
+      > :nth-child(2) { grid-area: numbers; }
+      > :nth-child(3) { grid-area: status; }
+      > :nth-child(4) { grid-area: amount; }
+      > :nth-child(5) { grid-area: actions; }
+    }
+  }
+
+  &__numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+
+  &__draw-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--color-secondary);
+    border-radius: 50%;
+    font-weight: bold;
+    transition: all 0.3s ease;
+
+    &--winning {
+      background-color: var(--color-success);
+      color: var(--bg-primary);
+      border-color: var(--color-success);
+      transform: scale(1.1);
+    }
+  }
+
+  &__status {
+    font-weight: bold;
+    text-transform: uppercase;
+
+    &--won {
+      color: var(--color-success);
+    }
+
+    &--lost {
+      color: var(--color-danger);
+    }
+  }
+
+  &__delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-size-lg);
+    color: var(--color-danger);
+    transition: transform 0.2s ease;
+    text-align: left;
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
 }
 
 :deep(.vl-overlay) {
@@ -222,5 +270,14 @@ export default {
 
 :deep(.vl-backdrop) {
   backdrop-filter: blur(5px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.history-page {
+  animation: fadeIn 0.5s ease-out;
 }
 </style>

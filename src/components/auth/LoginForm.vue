@@ -226,6 +226,8 @@ export default {
     border: none;
     border-radius: var(--border-radius-md);
     font-size: var(--font-size-md);
+    transition: all 0.3s ease;
+    cursor: pointer;
   }
 
   &__submit-btn {
@@ -234,6 +236,7 @@ export default {
 
     &:hover {
       background-color: var(--bg-secondary);
+      transform: translateY(-2px);
     }
   }
 
@@ -248,6 +251,7 @@ export default {
 
     &:hover {
       background-color: var(--border-secondary);
+      transform: translateY(-2px);
     }
 
     .google-icon,
@@ -263,6 +267,7 @@ export default {
     color: var(--color-white);
     color: black;
   }
+
   &__register-link {
     font-size: var(--font-size-sm);
     font-weight: 500;
@@ -276,36 +281,32 @@ export default {
   }
 }
 
-.language-switcher {
-  position: absolute;
-  top: var(--spacing-sm);
-  right: var(--spacing-sm);
-  display: flex;
-  gap: var(--spacing-sm);
-
-  button {
-    background: none;
-    border: none;
-    padding: 0;
-    opacity: 0.6;
-    transition: opacity var(--transition-default);
-
-    &.active,
-    &:hover {
-      opacity: 1;
-    }
-
-    img {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-    }
-  }
-}
-
 .error-message {
   color: var(--color-danger);
   font-size: var(--font-size-sm);
   margin-top: var(--spacing-xs);
+}
+
+@media (max-width: 480px) {
+  .login-form {
+    &__title {
+      font-size: var(--font-size-lg);
+    }
+
+    &__submit-btn,
+    &__github-btn,
+    &__google-btn {
+      font-size: var(--font-size-sm);
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-form {
+  animation: fadeIn 0.5s ease-out;
 }
 </style>

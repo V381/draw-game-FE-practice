@@ -244,144 +244,193 @@ export default {
 
 <style scoped lang="scss">
 .draw-page {
-  padding: 20px;
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #005baa;
-  color: white;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+
+  &__title {
+    font-size: var(--font-size-xl);
+    color: var(--color-secondary);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+    width: 100%;
+    max-width: 800px;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
+  }
+
+  &__section {
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    backdrop-filter: blur(10px);
+    transition: all var(--transition-default);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &__subtitle {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-secondary);
+    text-align: center;
+  }
+
+  &__numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: center;
+  }
+
+  &__number {
+    width: 60px;
+    height: 60px;
+    font-size: var(--font-size-md);
+    cursor: default;
+    border: 2px solid var(--color-secondary);
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+
+    &--matched {
+      background-color: var(--color-success);
+      color: var(--bg-primary);
+      border-color: var(--color-success);
+      transform: scale(1.1);
+    }
+
+    &--winning {
+      background-color: var(--color-warning);
+      color: var(--bg-primary);
+      border-color: var(--color-warning);
+      animation: pulse 1.5s infinite;
+    }
+  }
+
+  &__winnings {
+    margin-top: var(--spacing-lg);
+    width: 100%;
+    max-width: 800px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    backdrop-filter: blur(10px);
+  }
+
+  &__winnings-title {
+    font-size: var(--font-size-lg);
+    color: var(--color-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+  }
+
+  &__winnings-details {
+    font-size: var(--font-size-md);
+    color: var(--text-primary);
+    text-align: center;
+  }
+
+  &__winnings-list {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--spacing-sm);
+  }
+
+  &__winning-table {
+    margin-top: var(--spacing-lg);
+    width: 100%;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--text-primary);
+
+    th, td {
+      border: 1px solid var(--color-secondary);
+      padding: var(--spacing-sm);
+      text-align: center;
+    }
+
+    th {
+      background-color: rgba(0, 174, 239, 0.2);
+      color: var(--color-secondary);
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+  }
 }
 
-.draw-page__title {
-  font-size: 32px;
-  color: white;
-}
-
-.draw-page__container {
-  display: flex;
-  gap: 50px;
-  margin-top: 20px;
-  width: 100%;
-  max-width: 800px;
-}
-
-.draw-page__section {
-  flex: 1;
-}
-
-.draw-page__subtitle {
-  font-size: 24px;
-  margin-bottom: 10px;
-  color: white;
-}
-
-.draw-page__numbers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.draw-page__number {
-  width: 50px;
-  height: 50px;
-  font-size: 16px;
-  cursor: default;
-  border: 2px solid #00aeef;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  transition: background-color 0.3s, color 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.draw-page__number--matched {
-  background-color: #4caf50;
-  color: white;
-}
-
-.draw-page__number--winning {
-  background-color: #ff9800;
-  color: white;
-}
-
-.draw-page__winnings {
-  margin-top: 40px;
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  width: 100%;
-  max-width: 800px;
-}
-
-.draw-page__winnings-title {
-  margin-bottom: 10px;
-  color: white;
-  text-align: center;
-}
-
-.draw-page__winnings-details {
-  margin-top: 10px;
-  font-size: 18px;
-  color: white;
-  text-align: center;
-}
-
-.draw-page__winnings-list {
-  list-style: none;
-  padding: 0;
-}
-
-.draw-page__winnings-list li {
-  margin: 5px 0;
-}
-
-.draw-page__winning-table {
-  margin-top: 40px;
-  width: 100%;
-  max-width: 800px;
-}
-
-.draw-page__table {
-  width: 100%;
-  border-collapse: collapse;
-  color: white;
-}
-
-.draw-page__table th,
-.draw-page__table td {
-  border: 1px solid #00aeef;
-  padding: 10px;
-  text-align: center;
-}
-
-.draw-page__table th {
-  background-color: rgba(0, 174, 239, 0.2);
-}
-
-.draw-page__table tr:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.1);
-}
 .modal-buttons {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
 }
 
 .modal-button {
-  padding: 10px 20px;
+  padding: var(--spacing-sm) var(--spacing-md);
   border: none;
-  border-radius: 5px;
-  background-color: #00aeef;
-  color: white;
-  font-size: 16px;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-secondary);
+  color: var(--bg-primary);
+  font-size: var(--font-size-md);
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all var(--transition-default);
+  font-weight: bold;
 
   &:hover {
-    background-color: #008ecc;
+    background-color: var(--bg-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.draw-page {
+  animation: fadeIn 0.5s ease-out;
 }
 </style>

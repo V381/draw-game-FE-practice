@@ -194,7 +194,7 @@ export default {
     font-weight: bold;
     margin-bottom: var(--spacing-md);
     text-align: center;
-    color: var(--text-secondary);
+    color: var(--color-primary);
   }
 
   &__group {
@@ -217,10 +217,12 @@ export default {
     border: none;
     border-radius: var(--border-radius-md);
     cursor: pointer;
-    transition: background-color var(--transition-default);
+    transition: all 0.3s ease;
+    font-size: var(--font-size-md);
 
     &:hover {
       background-color: var(--bg-secondary);
+      transform: translateY(-2px);
     }
   }
 
@@ -241,5 +243,26 @@ export default {
   color: var(--color-danger);
   font-size: var(--font-size-sm);
   margin-top: var(--spacing-xs);
+}
+
+@media (max-width: 480px) {
+  .register-form {
+    &__title {
+      font-size: var(--font-size-lg);
+    }
+
+    &__submit-btn {
+      font-size: var(--font-size-sm);
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.register-form {
+  animation: fadeIn 0.5s ease-out;
 }
 </style>

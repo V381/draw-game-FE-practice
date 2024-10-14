@@ -127,89 +127,122 @@ export default {
 
 <style scoped lang="scss">
 .draw-details {
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg);
   background-color: var(--bg-primary);
   color: var(--text-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
 
   &__title {
     font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
     text-align: center;
+    color: var(--color-secondary);
   }
 
   &__table {
     width: 100%;
-    max-width: 600px;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0 var(--spacing-sm);
     margin-top: var(--spacing-md);
 
     th,
     td {
-      border: 1px solid var(--border-primary);
-      padding: var(--spacing-sm);
+      padding: var(--spacing-md);
       text-align: left;
+      border-radius: var(--border-radius-sm);
     }
 
     th {
-      background-color: var(--bg-secondary);
+      background-color: var(--color-primary);
+      color: white;
+      font-weight: bold;
+      border-right: none;
       width: 40%;
     }
 
-    tr:nth-child(even) {
-      background-color: rgba(255, 255, 255, 0.1);
+    td {
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(5px);
+    }
+
+    tr {
+      transition: all var(--transition-default);
+
+      &:hover td {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
     }
   }
 
   &__numbers {
     display: flex;
     flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: flex-start;
   }
 
   &__number {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
-    font-size: var(--font-size-sm);
-    border: 1px solid var(--border-primary);
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-md);
+    border: 2px solid var(--color-secondary);
     border-radius: 50%;
-    margin: var(--spacing-xs);
-    background-color: var(--bg-secondary);
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-default);
 
     &--winning {
-      background-color: var(--bg-success);
+      background-color: var(--color-success);
+      color: var(--bg-primary);
+      border-color: var(--color-success);
+      transform: scale(1.1);
+      font-weight: bold;
     }
   }
 
   &__status {
+    &--won,
+    &--lost {
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
     &--won {
       color: var(--color-success);
-      font-weight: bold;
     }
 
     &--lost {
       color: var(--color-danger);
-      font-weight: bold;
     }
   }
 
   &__back-btn {
-    margin-top: var(--spacing-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--color-secondary);
+    color: var(--bg-primary);
     border: none;
-    border-radius: var(--border-radius-sm);
+    border-radius: var(--border-radius-md);
     cursor: pointer;
     font-size: var(--font-size-md);
-    transition: background-color var(--transition-default);
+    font-weight: bold;
+    transition: all var(--transition-default);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 
     &:hover {
-      background-color: var(--bg-primary);
+      background-color: var(--bg-secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
   }
 }
@@ -224,5 +257,44 @@ export default {
 
 :deep(.vl-backdrop) {
   backdrop-filter: blur(5px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.draw-details {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@media (max-width: 600px) {
+  .draw-details {
+    padding: var(--spacing-md);
+
+    &__table {
+      th,
+      td {
+        display: block;
+        width: 100%;
+      }
+
+      th {
+        text-align: center;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      td {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        text-align: center;
+      }
+    }
+
+    &__numbers {
+      justify-content: center;
+    }
+  }
 }
 </style>
