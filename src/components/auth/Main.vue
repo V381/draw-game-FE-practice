@@ -1,16 +1,16 @@
 <template>
-    <div class="auth-container">
-      <div class="auth-container__content">
-        <div class="auth-container__logo-container">
-          <img src="@/assets/opap.png" alt="Company Logo" class="auth-container__logo">
-        </div>
-        <div class="auth-container__form-wrapper">
-          <LoginForm v-if="!showRegisterForm" @toggle-form="toggleForm" @login="handleLogin" />
-          <RegisterForm v-else @toggle-form="toggleForm" @register="handleRegister" />
-        </div>
+  <div class="auth-container">
+    <div class="auth-container__content">
+      <div class="auth-container__logo-container">
+        <img src="@/assets/opap.png" alt="Company Logo" class="auth-container__logo">
+      </div>
+      <div class="auth-container__form-wrapper">
+        <LoginForm v-if="!showRegisterForm" @toggle-form="toggleForm" @login="handleLogin" />
+        <RegisterForm v-else @toggle-form="toggleForm" @register="handleRegister" />
       </div>
     </div>
-  </template>
+  </div>
+</template>
 
 <script>
 import { ref } from 'vue'
@@ -48,36 +48,61 @@ export default {
 }
 </script>
 
-  <style lang="scss" scoped>
-  .auth-container {
+<style lang="scss" scoped>
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 90vh;
+  padding: 2rem;
+
+  &__content {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh;
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 
-    &__content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      max-width: 400px;
-      padding: 2rem;
-      background-color: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-
-    &__logo-container {
-      margin-bottom: 2rem;
-    }
-
-    &__logo {
-      width: 120px;
-      height: auto;
-    }
-
-    &__form-wrapper {
-      width: 100%;
+    @media (max-width: 480px) {
+      padding: 1.5rem;
     }
   }
-  </style>
+
+  &__logo-container {
+    margin-bottom: 2rem;
+  }
+
+  &__logo {
+    width: 120px;
+    height: auto;
+    transition: all 0.3s ease;
+
+    @media (max-width: 480px) {
+      width: 100px;
+    }
+  }
+
+  &__form-wrapper {
+    width: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.auth-container__content {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.auth-container__content:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+</style>

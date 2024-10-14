@@ -101,28 +101,34 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  background-color: #0A1F62;
-  padding: 15px 30px;
+  background-color: var(--bg-primary);
+  padding: var(--spacing-md) var(--spacing-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: white;
+  color: var(--text-primary);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
   &__menu {
     list-style-type: none;
     padding: 0;
     margin: 0;
     display: flex;
-    gap: 20px;
+    gap: var(--spacing-md);
 
     li {
       a {
-        color: white;
+        color: var(--text-primary);
         text-decoration: none;
         font-weight: bold;
+        font-size: var(--font-size-md);
+        transition: all var(--transition-default);
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: var(--border-radius-sm);
 
-        &:hover {
-          text-decoration: underline;
+        &:hover, &.router-link-active {
+          background-color: var(--color-secondary);
+          color: var(--bg-primary);
         }
       }
     }
@@ -131,23 +137,24 @@ export default {
   &__player-indicator {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: var(--spacing-md);
   }
 
   &__avatar {
     width: 40px;
     height: 40px;
-    background-color: #ffffff;
+    background-color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
     &-icon {
       width: 30px;
       height: 30px;
-      color: #0A1F62;
+      color: var(--bg-primary);
     }
 
     &-img {
@@ -159,21 +166,41 @@ export default {
 
   &__username {
     font-weight: bold;
+    font-size: var(--font-size-md);
+    color: var(--color-secondary);
   }
 
   &__logout-button {
     background-color: transparent;
-    border: 2px solid white;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 5px;
+    border: 2px solid var(--color-secondary);
+    color: var(--color-secondary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s, color 0.3s;
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-default);
 
     &:hover {
-      background-color: white;
-      color: #0A1F62;
+      background-color: var(--color-secondary);
+      color: var(--bg-primary);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+
+    &__menu {
+      width: 100%;
+      justify-content: center;
+    }
+
+    &__player-indicator {
+      width: 100%;
+      justify-content: center;
     }
   }
 }

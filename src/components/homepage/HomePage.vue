@@ -90,91 +90,134 @@ export default {
 }
 </script>
 
-  <style scoped>
-  .lottery {
-    display: flex;
-    padding: 20px;
-    gap: 40px;
-    background-color: #005baa;
-    color: white;
+  <style lang="scss" scoped>
+.lottery {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 2rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 768px) {
+    flex-direction: row;
   }
 
-  .lottery__board,
-  .lottery__selection {
+  &__board,
+  &__selection {
     flex: 1;
-  }
-
-  .lottery__title {
-    margin-bottom: 10px;
-  }
-
-  .lottery__numbers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .lottery__number-button {
-    width: 50px;
-    height: 50px;
-    font-size: 16px;
-    cursor: pointer;
-    border: 2px solid #00aeef;
-    border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    transition: background-color 0.3s, color 0.3s;
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    backdrop-filter: blur(10px);
   }
 
-  .lottery__number-button--selected {
-    background-color: #00aeef;
-    color: #005baa;
+  &__title {
+    font-size: var(--font-size-lg);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--color-secondary);
   }
 
-  .lottery__number-button:disabled {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.2);
-    cursor: not-allowed;
+  &__numbers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 0.75rem;
   }
 
-  .lottery__selected-list {
+  &__number-button {
+    width: 100%;
+    aspect-ratio: 1;
+    font-size: var(--font-size-md);
+    cursor: pointer;
+    border: 2px solid var(--color-secondary);
+    border-radius: var(--border-radius-sm);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    &--selected {
+      background-color: var(--color-secondary);
+      color: var(--bg-primary);
+      font-weight: bold;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__selected-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
   }
 
-  .lottery__selected-item {
+  &__selected-item {
     display: flex;
     align-items: center;
     background-color: rgba(255, 255, 255, 0.1);
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid var(--color-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-sm);
+    font-weight: bold;
+    color: white;
   }
 
-  .lottery__delete-button {
+  &__delete-button {
     background: none;
     border: none;
-    color: #ff6b6b;
-    margin-left: 5px;
+    color: var(--color-danger);
+    margin-left: 0.5rem;
     cursor: pointer;
-    font-size: 16px;
+    font-size: var(--font-size-md);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.2);
+    }
   }
 
-  .lottery__submit-button {
-    padding: 10px 20px;
-    font-size: 16px;
+  &__submit-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: var(--font-size-md);
     cursor: pointer;
-    background-color: #4caf50;
-    color: white;
+    background-color: var(--color-success);
+    color: var(--text-primary);
     border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-  }
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+    font-weight: bold;
 
-  .lottery__submit-button:disabled {
-    background-color: rgba(255, 255, 255, 0.2);
-    cursor: not-allowed;
+    &:hover:not(:disabled) {
+      background-color: darken(#4caf50, 10%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    &:disabled {
+      background-color: rgba(255, 255, 255, 0.2);
+      cursor: not-allowed;
+    }
   }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lottery {
+  animation: fadeIn 0.5s ease-out;
+}
   </style>
